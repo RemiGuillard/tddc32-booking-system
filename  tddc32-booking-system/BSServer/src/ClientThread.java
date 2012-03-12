@@ -26,17 +26,17 @@ public class ClientThread implements Runnable {
 		_network = network;
 		_s = s;
 		try	
-	    {
-	      _out = new ObjectOutputStream(_s.getOutputStream()); // flux de sortie : string
-	      _in = new ObjectInputStream(_s.getInputStream());// flux d'entrée : string
-	      _numClient = _network.addClient(_out); // ajoute le flux de sortie dans la liste et récupération de son numero
-	    }
-	    catch (IOException e){
-	    	// TODO: handle exception 
-	    }
+		{
+			_out = new ObjectOutputStream(_s.getOutputStream()); // flux de sortie : string
+			_in = new ObjectInputStream(_s.getInputStream());// flux d'entrée : string
+			_numClient = _network.addClient(_out); // ajoute le flux de sortie dans la liste et récupération de son numero
+		}
+		catch (IOException e){
+			// TODO: handle exception 
+		}
 
-	    _t = new Thread(this); // instanciation du thread
-	    _t.start(); // demarrage du thread, la fonction run() est lancée
+		_t = new Thread(this); // instanciation du thread
+		_t.start(); // demarrage du thread, la fonction run() est lancée
 	}
 
 	/** 
@@ -47,26 +47,26 @@ public class ClientThread implements Runnable {
 	// cette méthode doit obligatoirement être implémentée à cause de l'interface Runnable
 	public void run() {
 		String message = ""; // déclaration de la variable qui recevra les messages du client
-	    // on indique dans la console la connection d'un nouveau client
-	    System.out.println("Un nouveau client s'est connecte, no "+_numClient);
-	    try
-	    {
-	     //TODO action du thread client : listen sur la socket 
-	    }
-	    catch (Exception e){ }
-	    finally // finally se produira le plus souvent lors de la deconnexion du client
-	    {
-	      try
-	      {
-	      	// on indique à la console la deconnexion du client
-	        System.out.println("Le client no "+_numClient+" s'est deconnecte");
-	        _network.delClient(_numClient); // on supprime le client de la liste
-	        _s.close(); // fermeture du socket si il ne l'a pas déjà été (à cause de l'exception levée plus haut)
-	      }
-	      catch (IOException e) {
-	    	// TODO: handle exception
-	      }
-	    }
-		
+		// on indique dans la console la connection d'un nouveau client
+		System.out.println("Un nouveau client s'est connecte, no "+_numClient);
+		try
+		{
+			//TODO action du thread client : listen sur la socket 
+		}
+		catch (Exception e){ }
+		finally // finally se produira le plus souvent lors de la deconnexion du client
+		{
+			try
+			{
+				// on indique à la console la deconnexion du client
+				System.out.println("Le client no "+_numClient+" s'est deconnecte");
+				_network.delClient(_numClient); // on supprime le client de la liste
+				_s.close(); // fermeture du socket si il ne l'a pas déjà été (à cause de l'exception levée plus haut)
+			}
+			catch (IOException e) {
+				// TODO: handle exception
+			}
+		}
+
 	}
 }
