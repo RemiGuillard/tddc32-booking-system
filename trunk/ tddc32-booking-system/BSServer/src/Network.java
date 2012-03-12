@@ -30,59 +30,59 @@ public class Network {
 			// TODO: handle exception
 		}
 	}
-	
+
 	/** Methode : affiche le message d'accueil **/
-	  static private void printWelcome(Integer port)
-	  {
-	    System.out.println("--------");
-	    System.out.println("BSServer : Welcome");
-	    System.out.println("--------");
-	    System.out.println("Demarre sur le port : "+port.toString());
-	    System.out.println("--------");
-	    System.out.println("Quitter : tapez \"quit\"");
-	    System.out.println("Nombre de connectes : tapez \"total\"");
-	    System.out.println("--------");
-	  }
-	  
+	static private void printWelcome(Integer port)
+	{
+		System.out.println("--------");
+		System.out.println("BSServer : Welcome");
+		System.out.println("--------");
+		System.out.println("Demarre sur le port : "+port.toString());
+		System.out.println("--------");
+		System.out.println("Quitter : tapez \"quit\"");
+		System.out.println("Nombre de connectes : tapez \"total\"");
+		System.out.println("--------");
+	}
+
 	/** Methode : envoie le message à tous les clients 
 	 * @throws IOException 
 	 **/
-	  synchronized public void sendAll(String message,String sLast) throws IOException
-	  {
+	synchronized public void sendAll(String message,String sLast) throws IOException
+	{
 		ObjectOutputStream out; // declaration d'une variable permettant l'envoi de texte vers le client
-	    for (int i = 0; i < _tabClients.size(); i++) { // parcours de la table des connectés
-	      out = _tabClients.elementAt(i); // extraction de l'élément courant (type PrintWriter)
-	      if (out != null) { // sécurité, l'élément ne doit pas être vide
-	      	// ecriture du texte passé en paramètre (et concaténation d'une string de fin de chaine si besoin)
-	    	//out.print(message+sLast);
-	    	  
-	    	//TODO add message to output stream
-	        out.flush(); // envoi dans le flux de sortie
-	      }
-	    } 
-	  }
-	  
-	  /** Methode : détruit le client no i **/
-	  synchronized public void delClient(int i)
-	  {
-	    _nbClients--; // un client en moins ! snif
-	    if (_tabClients.elementAt(i) != null) {// l'élément existe ...
-	      _tabClients.removeElementAt(i); // ... on le supprime
-	    }
-	  }
+		for (int i = 0; i < _tabClients.size(); i++) { // parcours de la table des connectés
+			out = _tabClients.elementAt(i); // extraction de l'élément courant (type PrintWriter)
+			if (out != null) { // sécurité, l'élément ne doit pas être vide
+				// ecriture du texte passé en paramètre (et concaténation d'une string de fin de chaine si besoin)
+				//out.print(message+sLast);
 
-	  /** Methode : ajoute un nouveau client dans la liste **/
-	  synchronized public int addClient(ObjectOutputStream _out)
-	  {
-	    _nbClients++; // un client en plus ! ouaaaih
-	    _tabClients.addElement(_out); // on ajoute le nouveau flux de sortie au tableau
-	    return _tabClients.size()-1; // on retourne le numéro du client ajouté (size-1)
-	  }
+				//TODO add message to output stream
+				out.flush(); // envoi dans le flux de sortie
+			}
+		} 
+	}
 
-	  /** Methode : retourne le nombre de clients connectés **/
-	  synchronized public int getNbClients()
-	  {
-	    return _nbClients; // retourne le nombre de clients connectés
-	  }
-	  
+	/** Methode : détruit le client no i **/
+	synchronized public void delClient(int i)
+	{
+		_nbClients--; // un client en moins ! snif
+		if (_tabClients.elementAt(i) != null) {// l'élément existe ...
+			_tabClients.removeElementAt(i); // ... on le supprime
+		}
+	}
+
+	/** Methode : ajoute un nouveau client dans la liste **/
+	synchronized public int addClient(ObjectOutputStream _out)
+	{
+		_nbClients++; // un client en plus ! ouaaaih
+		_tabClients.addElement(_out); // on ajoute le nouveau flux de sortie au tableau
+		return _tabClients.size()-1; // on retourne le numéro du client ajouté (size-1)
+	}
+
+	/** Methode : retourne le nombre de clients connectés **/
+	synchronized public int getNbClients()
+	{
+		return _nbClients; // retourne le nombre de clients connectés
+	}
+
 }
