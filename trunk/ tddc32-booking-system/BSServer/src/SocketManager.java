@@ -1,47 +1,81 @@
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/*
+ * Handle the Socket server
+ * When new clients are connecting, create a new thread
+ */
+public class SocketManager implements Runnable {
 
-public class Network {
-
+	// OBSOLETE
 	private Vector<ObjectOutputStream> _tabClients = new Vector<ObjectOutputStream>(); // contiendra tous les flux de sortie vers les clients
 	private int _nbClients=0; // nombre total de clients connectés
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Network	network = new Network();
+	///
+	
+	private ServerSocket ss;	// server socket listening on port
+	private int _port;			// Listening on port
+	private int	_nbMax;			// Number of maximum simultaneous client
+	
+	public SocketManager() {
+        this._port = 42042;		// Default port if not specified
+        this._nbMax = 5;		// Default number max of client
+    }
+	
+	public SocketManager(int port, int nbMaxClient) {
+        this._port = port;			// Specified port
+        this._nbMax = nbMaxClient;	// Specified max nb Client
+    }
+	
+	@Override
+	public void run() {
 		try {
-			Integer port;
-			if(args.length<=0) 
-				port = new Integer("18000"); // si pas d'argument : port 18000 par défaut
-			else 
-				port = new Integer(args[0]); // port passé en argument
-			//new Commandes(network); // lance le thread de gestion des commandes
+            this.ss = new ServerSocket(this._port, this._nbMax);	// Socket created listening on _port
+            this.ss.setSoTimeout(10000);							// Setting timeout to 10 sec - "I'm not dead"
+            printWelcome(this._port);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(SocketManager.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Port already taken. Please change it.");
+            return;		// If can't launch server socket, exit 
+        }
+		
+		while(true){
+			
+			try {
+				Socket  socket;
+				Thread  newClient;
+				
+				socket = this.ss.accept();								// Wait for a new client
+				System.out.println("New client connecting");
 
-			ServerSocket ss = new ServerSocket(port.intValue()); // ouverture d'un socket serveur sur port
-			printWelcome(port);
-			while (true) { // attente en boucle de connexion (bloquant sur ss.accept)
-				new ClientThread(ss.accept(),network); // un client se connecte, un nouveau thread client est lancé
+				newClient = new Thread(new ClientThread(socket));		// New thread created for client
+				newClient.start();										// Run the new thread
+
+			} catch (SocketTimeoutException e) {
+				System.out.println("Not dead - Waiting for Client");	// Not dead message
+			} catch (IOException e) {		
+				System.err.println("Server Error");						// To handle correctly
 			}
-		}
-		catch (Exception e) {
-			// TODO: handle exception
+
 		}
 	}
+	
 
-	/** Methode : affiche le message d'accueil **/
+	/** Method : display Hello message **/
 	static private void printWelcome(Integer port)
 	{
 		System.out.println("--------");
 		System.out.println("BSServer : Welcome");
 		System.out.println("--------");
-		System.out.println("Demarre sur le port : "+port.toString());
+		System.out.println("Start on port : "+port.toString());
 		System.out.println("--------");
-		System.out.println("Quitter : tapez \"quit\"");
-		System.out.println("Nombre de connectes : tapez \"total\"");
+		System.out.println("Quit : enter \"quit\"");
 		System.out.println("--------");
 	}
 
@@ -85,5 +119,7 @@ public class Network {
 	{
 		return _nbClients; // retourne le nombre de clients connectés
 	}
+
+
 
 }
