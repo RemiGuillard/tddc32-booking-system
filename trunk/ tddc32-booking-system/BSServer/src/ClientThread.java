@@ -1,6 +1,7 @@
-import java.net.*;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 
 
@@ -27,8 +28,8 @@ public class ClientThread implements Runnable {
 		_s = s;
 		try	
 		{
-			_out = new ObjectOutputStream(_s.getOutputStream()); // flux de sortie : string
-			_in = new ObjectInputStream(_s.getInputStream());// flux d'entrée : string
+			_out = new ObjectOutputStream(_s.getOutputStream()); // flux de sortie
+			_in = new ObjectInputStream(_s.getInputStream());// flux d'entrée
 			_numClient = _network.addClient(_out); // ajoute le flux de sortie dans la liste et récupération de son numero
 		}
 		catch (IOException e){
@@ -53,7 +54,9 @@ public class ClientThread implements Runnable {
 		{
 			//TODO action du thread client : listen sur la socket 
 		}
-		catch (Exception e){ }
+		catch (Exception e){
+			// TODO: handle exception
+		}
 		finally // finally se produira le plus souvent lors de la deconnexion du client
 		{
 			try

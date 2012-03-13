@@ -1,11 +1,12 @@
-import java.net.*;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.util.Vector;
 
 
 public class Network {
 
-	private Vector<ObjectOutputStream> _tabClients = new Vector(); // contiendra tous les flux de sortie vers les clients
+	private Vector<ObjectOutputStream> _tabClients = new Vector<ObjectOutputStream>(); // contiendra tous les flux de sortie vers les clients
 	private int _nbClients=0; // nombre total de clients connectés
 	/**
 	 * @param args
