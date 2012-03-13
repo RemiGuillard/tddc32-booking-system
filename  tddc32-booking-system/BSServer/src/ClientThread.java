@@ -1,75 +1,80 @@
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
 /**
- *  Classe associée à chaque client 
- * 	Il y aura autant d'instances de cette classe que de clients connectés 
+ *	Handle the client
+ *	Client can access to synchronized value BookSystem and DB
  **/
-//implémentation de l'interface Runnable (une des 2 méthodes pour créer un thread)
 public class ClientThread implements Runnable {
 
-	private Thread _t; // contiendra le thread du client
-	private Socket _s; // recevra le socket liant au client
-	private ObjectOutputStream _out; // pour gestion du flux de sortie
-	private ObjectInputStream _in; // pour gestion du flux d'entrée
-	private Network _network; // pour utilisation des méthodes de la classe principale
-	private int _numClient = 0; // contiendra le numéro de client géré par ce thread
+	private Thread _t;					//*Will contain client thread
+	private Socket _socket;				// Client socket
+	private BufferedInputStream _in;	// In stream
+	private BufferedOutputStream _out;	// Out stream
+	private SocketManager _network;		//*pour utilisation des méthodes de la classe principale
+	private int _numClient = 0; 		//*contiendra le numéro de client géré par ce thread
 
-	/** 
-	 * Constructor 
-	 **/
-	ClientThread(Socket s, Network network) // le param s est donnée dans BlablaServ par ss.accept()
+	public ClientThread(Socket s)	// Socket is given by SocketManager
 	{
-		_network = network;
-		_s = s;
-		try	
-		{
-			_out = new ObjectOutputStream(_s.getOutputStream()); // flux de sortie
-			_in = new ObjectInputStream(_s.getInputStream());// flux d'entrée
-			_numClient = _network.addClient(_out); // ajoute le flux de sortie dans la liste et récupération de son numero
-		}
-		catch (IOException e){
-			// TODO: handle exception 
-		}
-
-		_t = new Thread(this); // instanciation du thread
-		_t.start(); // demarrage du thread, la fonction run() est lancée
+		_socket = s;			
 	}
 
-	/** 
-	 * Methode :  exécutée au lancement du thread par t.start()
-	 * Elle attend les messages en provenance du serveur et les redirige 
-	 * @Override
-	 **/
-	// cette méthode doit obligatoirement être implémentée à cause de l'interface Runnable
-	public void run() {
-		String message = ""; // déclaration de la variable qui recevra les messages du client
-		// on indique dans la console la connection d'un nouveau client
-		System.out.println("Un nouveau client s'est connecte, no "+_numClient);
-		try
-		{
-			//TODO action du thread client : listen sur la socket 
-		}
-		catch (Exception e){
-			// TODO: handle exception
-		}
-		finally // finally se produira le plus souvent lors de la deconnexion du client
-		{
-			try
-			{
-				// on indique à la console la deconnexion du client
-				System.out.println("Le client no "+_numClient+" s'est deconnecte");
-				_network.delClient(_numClient); // on supprime le client de la liste
-				_s.close(); // fermeture du socket si il ne l'a pas déjà été (à cause de l'exception levée plus haut)
-			}
-			catch (IOException e) {
-				// TODO: handle exception
-			}
-		}
 
+	@Override
+	public void run() {
+		
+		try	
+		{
+			_in = new BufferedInputStream(_socket.getInputStream());			// In Stream
+			_out = new BufferedOutputStream(_socket.getOutputStream());		// Out Stream
+			System.out.println("In/Out stream established.");
+		}
+		catch (IOException ex){
+			Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+			System.out.println("Can't open In/Out stream for client.");
+			return;
+		}
+		
+		System.out.println("Someone connected");
+		
+		     
+        boolean isAlive = true;
+        while (isAlive) {
+        	try {
+        		byte[]		message = new byte[1000];
+        		Integer		receivedBits;
+			
+        		while ((receivedBits = this._in.read(message)) >= 0) {
+        			System.out.println("Size: "+receivedBits.toString() +"Message: "+message);
+        		}
+        		isAlive = false;
+        	} catch (IOException e1) {
+        		System.out.println("IOException");
+        		try {
+        			this._in.close();
+        			this._out.close();
+        			this._socket.close();
+        			System.out.println("SocketClosed");
+        			isAlive = false;
+        		} catch (IOException ex) {
+        			Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+        		}
+        	} finally {
+        		try {
+        			this._in.close();
+        			this._out.close();
+        			this._socket.close(); // fermeture du socket si il ne l'a pas déjà été (à cause de l'exception levée plus haut)
+        			System.out.println("Client disconnected");
+        		} catch (IOException e) {
+        			Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, e);
+        		}
+        	}
+        }
 	}
 }
