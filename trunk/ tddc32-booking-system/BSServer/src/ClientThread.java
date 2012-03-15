@@ -17,36 +17,37 @@ public class ClientThread implements Runnable {
 	private Socket _socket;				// Client socket
 	private BufferedInputStream _in;	// In stream
 	private BufferedOutputStream _out;	// Out stream
-	//private SocketManager _network;		//*pour utilisation des méthodes de la classe principale
+	private SocketManager _sockManager;		//*pour utilisation des méthodes de la classe principale
 	private int _numClient = 0; 		//*contiendra le numéro de client géré par ce thread
 	
 	/**
 	 * Constructor
 	 * @param s
 	 */
-	public ClientThread(Socket s)	// Socket is given by SocketManager
+	public ClientThread(Socket s, SocketManager sm)	// Socket is given by SocketManager
 	{
 		try	
 		{
 			_socket = s;
+			_sockManager = sm;
 			_in = new BufferedInputStream(_socket.getInputStream());			// In Stream
 			_out = new BufferedOutputStream(_socket.getOutputStream());		// Out Stream
-			++_numClient;
+			_numClient = _sockManager.addClient(_out);
 			System.out.println("In/Out stream established.");
+			System.out.println("client number = " + _numClient);
 			_t = new Thread(this);
 			_t.start();
 		}
 		catch (IOException ex){
 			Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
 			System.out.println("Can't open In/Out stream for client.");
-			// TODO new ClientThread(socket) ?
+			// TODO new ClientThread(socket) ? => retenter connexion ?
 			return;
 		}
 	}
 
 	@Override
 	public void run() {
-		
 		System.out.println("Someone connected");
         boolean isAlive = true;
         while (isAlive) {
@@ -59,19 +60,20 @@ public class ClientThread implements Runnable {
         		}
         		isAlive = false;
         	} catch (IOException e1) {
-        		closeIOStream();
+        		closeClient();
         	} finally {
-        		closeIOStream();
+        		closeClient();
         	}
         }
 	}
 	
-	private void closeIOStream(){
+	private void closeClient(){
 		System.out.println("IOException");
 		try {
 			this._in.close();
 			this._out.close();
 			this._socket.close(); // fermeture du socket si il ne l'a pas déjà été (à cause de l'exception levée plus haut)
+			_sockManager.delClient(_numClient);
 			System.out.println("Client disconnected");
 		} catch (IOException e) {
 			Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, e);

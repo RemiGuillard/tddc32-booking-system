@@ -1,3 +1,4 @@
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
 public class SocketManager implements Runnable {
 
 	// OBSOLETE
-	private Vector<ObjectOutputStream> _tabClients = new Vector<ObjectOutputStream>(); // contiendra tous les flux de sortie vers les clients
+	private Vector<BufferedOutputStream> _tabClients = new Vector<BufferedOutputStream>(); // contiendra tous les flux de sortie vers les clients
 	private int _nbClients = 0; // nombre total de clients connectés
 	///
 
@@ -53,7 +54,7 @@ public class SocketManager implements Runnable {
 
 				socket = this._ss.accept();								// Wait for a new client
 				System.out.println("New client connecting");
-				new ClientThread(socket);
+				new ClientThread(socket, this);
 				//newClient = new Thread(new ClientThread(socket));		// New thread created for client
 				//newClient.start();										// Run the new thread
 
@@ -84,7 +85,7 @@ public class SocketManager implements Runnable {
 	 **/
 	synchronized public void sendAll(String message,String sLast) throws IOException
 	{
-		ObjectOutputStream out; // declaration d'une variable permettant l'envoi de texte vers le client
+		BufferedOutputStream out; // declaration d'une variable permettant l'envoi de texte vers le client
 		for (int i = 0; i < _tabClients.size(); i++) { // parcours de la table des connectés
 			out = _tabClients.elementAt(i); // extraction de l'élément courant (type PrintWriter)
 			if (out != null) { // sécurité, l'élément ne doit pas être vide
@@ -107,7 +108,7 @@ public class SocketManager implements Runnable {
 	}
 
 	/** Methode : ajoute un nouveau client dans la liste **/
-	synchronized public int addClient(ObjectOutputStream _out)
+	synchronized public int addClient(BufferedOutputStream _out)
 	{
 		_nbClients++; // un client en plus ! ouaaaih
 		_tabClients.addElement(_out); // on ajoute le nouveau flux de sortie au tableau
