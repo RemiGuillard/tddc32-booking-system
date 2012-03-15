@@ -6,9 +6,7 @@ public class BookSystem {
 	 */
 	public static void main(String[] args) {
 		SocketManager sock = new SocketManager(/* BOOK SYS */);
-	       
-	       sock.run();
-
+		sock.run();
 	}
 
 }
