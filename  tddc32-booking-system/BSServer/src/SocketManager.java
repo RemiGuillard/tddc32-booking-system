@@ -1,10 +1,8 @@
-import java.io.BufferedOutputStream;
+
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,13 +13,15 @@ import java.util.logging.Logger;
 public class SocketManager implements Runnable {
 
 	// OBSOLETE
-	private Vector<BufferedOutputStream> _tabClients = new Vector<BufferedOutputStream>(); // contiendra tous les flux de sortie vers les clients
-	private int _nbClients = 0; // nombre total de clients connectés
+	//private Vector<BufferedOutputStream> _tabClients = new Vector<BufferedOutputStream>(); // contiendra tous les flux de sortie vers les clients
+	//private int _nbClients = 0; // nombre total de clients connectés
 	///
 
-	private ServerSocket _ss;	// server socket listening on port
-	private int _port;			// Listening on port
-	private int	_nbMax;			// Number of maximum simultaneous client
+	private ServerSocket	_ss;	// server socket listening on port
+	private BookSystem		_bs;	// bookingSystem, to synchronize
+	private int				_port;	// Listening on port
+	private int				_nbMax;	// Number of maximum simultaneous client
+	
 
 	public SocketManager() {
 		this._port = 42042;		// Default port if not specified
@@ -54,7 +54,7 @@ public class SocketManager implements Runnable {
 
 				socket = this._ss.accept();								// Wait for a new client
 				System.out.println("New client connecting");
-				new ClientThread(socket, this);
+				new ClientThread(socket, this, _bs);
 				//newClient = new Thread(new ClientThread(socket));		// New thread created for client
 				//newClient.start();										// Run the new thread
 
@@ -79,48 +79,5 @@ public class SocketManager implements Runnable {
 		System.out.println("Quit : enter \"quit\"");
 		System.out.println("--------");
 	}
-
-	/** Methode : envoie le message à tous les clients 
-	 * @throws IOException 
-	 **/
-	synchronized public void sendAll(String message,String sLast) throws IOException
-	{
-		BufferedOutputStream out; // declaration d'une variable permettant l'envoi de texte vers le client
-		for (int i = 0; i < _tabClients.size(); i++) { // parcours de la table des connectés
-			out = _tabClients.elementAt(i); // extraction de l'élément courant (type PrintWriter)
-			if (out != null) { // sécurité, l'élément ne doit pas être vide
-				// ecriture du texte passé en paramètre (et concaténation d'une string de fin de chaine si besoin)
-				//out.print(message+sLast);
-
-				//TODO add message to output stream
-				out.flush(); // envoi dans le flux de sortie
-			}
-		} 
-	}
-
-	/** Methode : détruit le client no i **/
-	synchronized public void delClient(int i)
-	{
-		_nbClients--; // un client en moins ! snif
-		if (_tabClients.elementAt(i) != null) {// l'élément existe ...
-			_tabClients.removeElementAt(i); // ... on le supprime
-		}
-	}
-
-	/** Methode : ajoute un nouveau client dans la liste **/
-	synchronized public int addClient(BufferedOutputStream _out)
-	{
-		_nbClients++; // un client en plus ! ouaaaih
-		_tabClients.addElement(_out); // on ajoute le nouveau flux de sortie au tableau
-		return _tabClients.size()-1; // on retourne le numéro du client ajouté (size-1)
-	}
-
-	/** Methode : retourne le nombre de clients connectés **/
-	synchronized public int getNbClients()
-	{
-		return _nbClients; // retourne le nombre de clients connectés
-	}
-
-
 
 }
