@@ -33,6 +33,10 @@ public class SocketManager implements Runnable {
 		this._nbMax = nbMaxClient;	// Specified max nb Client
 	}
 
+	public void setBs(BookSystem bs) {
+		this._bs = bs;
+	}
+	
 	@Override
 	public void run() {
 		try {
@@ -50,13 +54,10 @@ public class SocketManager implements Runnable {
 
 			try {
 				Socket  socket;
-				//Thread  newClient;
 
 				socket = this._ss.accept();								// Wait for a new client
 				System.out.println("New client connecting");
 				new ClientThread(socket, this, _bs);
-				//newClient = new Thread(new ClientThread(socket));		// New thread created for client
-				//newClient.start();										// Run the new thread
 
 			} catch (SocketTimeoutException e) {
 				System.out.println("Not dead - Waiting for Client");	// Not dead message
@@ -65,6 +66,7 @@ public class SocketManager implements Runnable {
 			}
 
 		}
+		
 	}
 
 
