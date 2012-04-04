@@ -57,7 +57,8 @@ public class BookSystem {
 			break;
 		
 		case REGISTER:
-			this.tryRegister();
+			an.value = this.tryRegister(req.login, req.password);
+			an.type = req.type;
 			break;
 			
 		default:
@@ -72,7 +73,7 @@ public class BookSystem {
 	}
 	
 	private int	tryLogin(String login, String password) {
-		Iterator<Hashtable<String, String>> it = db.executeQuery("SELECT ID, PassWord FROM LaundryUsers WHERE UserName = '"+login+"';").iterator();
+		Iterator<Hashtable<String, String>> it = db.selectQuery("SELECT ID, PassWord FROM LaundryUsers WHERE UserName = '"+login+"';").iterator();
 		Hashtable<String, String> res;
 		
 		if (it.hasNext()) {
@@ -99,8 +100,9 @@ public class BookSystem {
 		return true;
 	}
 	
-	private boolean tryRegister() {
+	private boolean tryRegister(String login, String password) {
 		
-		return true;
+		return db.insertQuery("INSERT INTO LaundryUsers (UserName, PassWord) VALUES ('"+login+"', '"+password+"');");
+		
 	}
 }
