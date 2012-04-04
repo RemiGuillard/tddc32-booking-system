@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import NetworkPackage.Answer;
 import NetworkPackage.Request;
+import NetworkPackage.queryType;
 
 
 
@@ -11,11 +12,11 @@ public class BookSystem {
 	
 	private DBManager db;
 	
-	public BookSystem() {
+	public BookSystem() throws Exception {
 		db = new DBManager();
 		if (!db.dbConnect()) {
 			System.out.println("ERROR: Can't connect to database");
-			// TODO Throw exception
+			throw new Exception ();
 		}
 		System.out.println("Connection established");
 	}
@@ -23,26 +24,47 @@ public class BookSystem {
 	public void Disconnect() {
 		db.dbDisconnect();
 	}
-
+	
 	public Answer	executeRequest(Request req) {
-		Answer an = new Answer();
-		
+		Answer	an = new Answer();
+		int		val;
+
 		switch (req.type){
 			
-		case 1:
-			this.tryLogin(req.login, req.password);
+		case LOGIN:
+			val = this.tryLogin(req.login, req.password);
+			an.type = req.type;
+			if (val <= -1) {
+				an.value = false;
+				an.errorValue = val;
+				an.userid = -1;
+			} else {
+				an.value = true;
+				an.userid = val;
+			}
+			break;
 			
-		case 2:
+		case BOOKING:
 			this.tryBooking();
+			break;
 			
-		case 3:
+		case DELAYING:
 			this.tryDelaying();
+			break;
 			
-		case 4:
+		case CANCELING:
 			this.tryCanceling();
+			break;
+		
+		case REGISTER:
+			this.tryRegister();
+			break;
 			
 		default:
 			System.out.println("Error: unknown action type\n");
+			an.type = queryType.UNKNOWN;
+			an.value = false;
+			break;
 		
 		}
 		
@@ -73,6 +95,11 @@ public class BookSystem {
 	}
 	
 	private boolean tryCanceling() {
+		
+		return true;
+	}
+	
+	private boolean tryRegister() {
 		
 		return true;
 	}
