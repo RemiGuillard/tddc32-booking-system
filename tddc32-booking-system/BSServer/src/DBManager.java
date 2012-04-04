@@ -46,7 +46,24 @@ public class DBManager {
 		return connected;
 	}
 	   
-	public ArrayList<Hashtable<String, String>> executeQuery(String sql) {
+	public boolean	insertQuery(String sql) {
+		
+		Statement statement;
+		
+		try {
+			statement = myConnection.createStatement();
+			statement.execute(sql);
+
+		} catch (NullPointerException npe) {
+			return false;
+		} catch (SQLException e) {
+			System.out.println("REGISTER Query failed: " + e);
+			return false;
+		}
+		return true;
+	}
+	
+	public ArrayList<Hashtable<String, String>> selectQuery(String sql) {
 
 		Statement statement;
 		ResultSet resSet;
