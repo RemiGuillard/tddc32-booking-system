@@ -5,6 +5,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import NetworkPackage.Answer;
+import NetworkPackage.Request;
+import NetworkPackage.queryType;
+
 
 public class SocketManager implements Runnable {
 	private	int			_port = 42042;
@@ -15,17 +19,12 @@ public class SocketManager implements Runnable {
 	private	InetAddress	_addr;
     private ObjectOutputStream	_output;
     private ObjectInputStream	_input;
-    private	GUI			_gui;
+    private	Request[]	_requestPool;
+    private	BookSystem	_bs;
+    private Thread		_t;		
+    //private	GUI			_gui;
 	
 	public SocketManager() {}
-	
-	public	boolean	login(String login, String pass) {
-		if (login.isEmpty() || pass.isEmpty())
-			return false;
-		_login = login;
-		_password = pass;
-		return true;
-	}
 	
 	public	boolean	connection(int port, byte ip[]) {
 		//TODO port & IP check
@@ -34,7 +33,11 @@ public class SocketManager implements Runnable {
 			_addr = InetAddress.getByAddress(_ip);
 			_port = port;
 			_sock = new Socket(_addr, _port);
-			run();
+			_output = new ObjectOutputStream(_sock.getOutputStream());
+	        _input = new ObjectInputStream(_sock.getInputStream());
+	        _t = new Thread(this);
+	        _t.start();
+
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,14 +49,33 @@ public class SocketManager implements Runnable {
 		return true;
 	}
 	
-	public	void	linkGUI(GUI g) {
-		_gui = g;
-	}
-
 	@Override
 	public void run() {
+		Answer an;
+		while (true) {
+			try {
+				an = (Answer) _input.readObject();
+				_bs.manageAnswer(an);
+			} catch (ClassNotFoundException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void setBookSys(BookSystem bookMana) {
+		_bs = bookMana;
+	}
+
+	public void sendRequest(Request req) {
 		// TODO Auto-generated method stub
-		
+        try {
+        	_output.writeObject(req);
+			_output.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }
