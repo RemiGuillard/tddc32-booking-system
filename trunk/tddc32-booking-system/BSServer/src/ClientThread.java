@@ -16,16 +16,13 @@ import NetworkPackage.Request;
  **/
 public class ClientThread implements Runnable {
 
-	private Thread					_t;					//*Will contain client thread
-	private Socket					_socket;				// Client socket
-	private BookSystem				_bs;
-	private ObjectInputStream		_ios;
-	private ObjectOutputStream		_oos;
+	private Thread					_t;					// Will contain client thread
+	private Socket					_socket;			// Client socket
+	private BookSystem				_bs;				// BookingSystem, will be accessed with "synchronize"
+	private ObjectInputStream		_ios;				// Object input stream
+	private ObjectOutputStream		_oos;				// Object output stream
 
-	/**
-	 * Constructor
-	 * @param s
-	 */
+
 	public ClientThread(Socket s, SocketManager sm, BookSystem bs)	// Socket is given by SocketManager
 	{
 		try	
@@ -35,9 +32,9 @@ public class ClientThread implements Runnable {
 
 			_ios = new ObjectInputStream(_socket.getInputStream());
 			_oos = new ObjectOutputStream(_socket.getOutputStream());
-			
-			
+
 			System.out.println("In/Out stream established.");
+
 			_t = new Thread(this);
 			_t.start();
 		} catch (EOFException e1) {
@@ -48,7 +45,7 @@ public class ClientThread implements Runnable {
 			System.out.println("Can't open In/Out stream for client.");
 
 			return;
-		}
+		} 
 	}
 
 	@Override
@@ -58,11 +55,11 @@ public class ClientThread implements Runnable {
         while (isAlive) {
         	try {
 
-        		System.out.println("Waiting for Something");
+        		System.out.println("[DEBUG] - Waiting for Something");
         		Request req = (Request) _ios.readObject();
-        		System.out.println("Something received");
+        		System.out.println("[DEBUG] - Something received");
         		_oos.writeObject(this._bs.executeRequest(req));
-        		System.out.println("Sending Something");
+        		System.out.println("[DEBUG] - Sending Something");
         		_oos.flush();
         		
         	} catch (EOFException e1) {
@@ -75,15 +72,15 @@ public class ClientThread implements Runnable {
         	}
         }
         closeClient();
-        System.out.println("Thread ending");
+        System.out.println("[DEBUG] - Thread ending");
 	}
 	
 	private void closeClient() {
-		System.out.println("IOException");
+		System.out.println("[DEBUG] - IOException");
 		try {
 			this._ios.close();
 			this._oos.close();
-			this._socket.close(); // fermeture du socket si il ne l'a pas déjà été (à cause de l'exception levée plus haut)
+			this._socket.close();
 			System.out.println("Client disconnected");
 		} catch (IOException e) {
 			Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, e);
