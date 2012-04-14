@@ -56,7 +56,10 @@ public class SocketManager implements Runnable {
 			try {
 				an = (Answer) _input.readObject();
 				_bs.manageAnswer(an);
-			} catch (ClassNotFoundException | IOException e) {
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
