@@ -43,7 +43,6 @@ import javax.swing.JPasswordField;
 import NetworkPackage.queryType;
 
 
-
 public class GUI extends JFrame implements ActionListener {
 	private JMenuBar menuBar;
 	private JMenu mnFile;
@@ -329,31 +328,31 @@ public class GUI extends JFrame implements ActionListener {
         else if(arg0.getSource() == btnConnection)
         	actionBtnConnection();
         else if (arg0.getSource() == btnRegister)
-        	changeContext("REGISTRATION", true);
+        	changeContext(guiContext.REGISTRATION, true);
         else if (arg0.getSource() == btnRegister_1)
         	actionBtnRegister();
 	}
 
-	public	void	changeContext(String context, Boolean action) {
+	public	void	changeContext(guiContext context, Boolean action) {
 		Component obj = getFocusOwner();
 		if (action) {
 			obj.hide();
 			switch (context) {
-			case	"LOGIN":
+			case	LOGIN:
 				MessagePan.show();
 				break;
-			case	"REGISTRATION":
+			case	REGISTRATION:
 	    		registerPan.show();
 				break;
-			case	"REGISTER":
+			case	REGISTER:
 				loginPan.show();
 				break;
-			case	"CONNECTION":
+			case	CONNECTION:
 				loginPan.show();
 				break;
 			default:
 				obj.show();
-				errorManagement("404");
+				errorManagement(guiContext.NOTFOUND);
 				break;
 			}
 		}
@@ -361,22 +360,22 @@ public class GUI extends JFrame implements ActionListener {
 			errorManagement(context);
 	}
 	
-	private void errorManagement(String context) {
+	private void errorManagement(guiContext context) {
 		String msg;
 		switch (context) {
-		case "LOGIN":
+		case LOGIN:
 			msg = "Login could not be performed please try again later";
 			break;
-		case "REGISTRATION":
+		case REGISTRATION:
 			msg = "Registration impossible";
 			break;
-		case "REGISTER":
+		case REGISTER:
 			msg = "Impossible to register please try again later";
 			break;
-		case "CONNECTION":
+		case CONNECTION:
 			msg = "Connection impossible please try again later";
 			break;
-		case "404":
+		case NOTFOUND:
 			msg = "Page not found";
 			break;
 		default:
