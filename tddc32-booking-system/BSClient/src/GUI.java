@@ -333,6 +333,7 @@ public class GUI extends JFrame implements ActionListener {
         	actionBtnRegister();
 	}
 
+	@SuppressWarnings("deprecation")
 	public	void	changeContext(guiContext context, Boolean action) {
 		Component obj = getFocusOwner();
 		if (action) {
@@ -396,10 +397,10 @@ public class GUI extends JFrame implements ActionListener {
 	
 	public	void	actionBtnConnection() {
 		byte[]	ip = {
-				Byte.valueOf(_IP1.getText()),
-				Byte.valueOf(_IP2.getText()),
-				Byte.valueOf(_IP3.getText()),
-				Byte.valueOf(_IP4.getText()),
+				Byte.parseByte(_IP1.getText()),
+				Byte.parseByte(_IP2.getText()),
+				Byte.parseByte(_IP3.getText()),
+				Byte.parseByte(_IP4.getText()),
 		};
 		_bs.connection(Integer.valueOf(_Port.getText()), ip);
 	}

@@ -29,10 +29,13 @@ public class SocketManager implements Runnable {
 	public	boolean	connection(int port, byte ip[]) {
 		//TODO port & IP check
 		_ip = ip;
+		//byte[] b = {(byte) 192,(byte) 168,(byte)1,Byte.parseByte(arg0)(65)};
 		try {
-			_addr = InetAddress.getByAddress(_ip);
+			Integer[] _ip2 = {_ip[0]&0xFF,_ip[1]&0xFF,_ip[2]&0xFF,_ip[3]&0xFF};
+			//_addr = InetAddress.get(_ip2);
+			//_addr = InetAddress.getByName("192.168.1.65");
 			_port = port;
-			_sock = new Socket(_addr, _port);
+			_sock = new Socket("192.168.1.65", _port);
 			_output = new ObjectOutputStream(_sock.getOutputStream());
 	        _input = new ObjectInputStream(_sock.getInputStream());
 	        _t = new Thread(this);
