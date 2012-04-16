@@ -50,7 +50,7 @@ public class ClientThread implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("Someone connected");
+		System.out.println("[DEBUG] - Someone connected");
         boolean isAlive = true;
         while (isAlive) {
         	try {
