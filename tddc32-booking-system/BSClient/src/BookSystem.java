@@ -13,13 +13,23 @@ import NetworkPackage.queryType;
 
 public class BookSystem {
 	private	SocketManager	_socket;
-	private	GUI				_gui;
+	private GuiLogin 		_log;
+	private GuiConnect 		_co;
+	private GuiRegister 	_reg;
+	private GuiCalendar 	_cal;
+	
 	//private	Answer			_an;
 	private	int			_userID;
 	
-	public	BookSystem (SocketManager sock, GUI g) {
+	public	BookSystem (SocketManager sock, GuiConnect co) {
 		_socket = sock;
-		_gui = g;
+		_co = co;
+		_log = new GuiLogin();
+		_reg = new GuiRegister();
+		_cal = new GuiCalendar();
+		_log.setBookSys(this);
+		_reg.setBookSys(this);
+		_cal.setBookSys(this);
 	}
 	
 	public	void	manageAnswer(Answer an) {
@@ -60,13 +70,24 @@ public class BookSystem {
 	}
 
 	private void manageRegister(Answer an) {
-		_gui.changeContext(guiContext.REGISTER, an.value);
+		if (an.value) {
+			_reg.setVisible(false);
+			_log.setVisible(true);
+			_log.sayRegistrationSuccesful();
+		} else 
+			_reg.sayRegistrationFailed();
+			
+		//		_gui.changeContext(guiContext.REGISTER, an.value);
 	}
 	
 	private void manageLogin(Answer an) {
-		if (an.value && an.userid > 0)
+		if (an.value && an.userid > 0) {
 			_userID = an.userid;
-		_gui.changeContext(guiContext.LOGIN, an.value);
+			_log.setVisible(false);
+			_cal.setVisible(true);
+		} else 
+			_log.sayLoginFailed();
+	//	_gui.changeContext(guiContext.LOGIN, an.value);
 	}
 
 	public void register(String login, String pass) {
@@ -85,8 +106,34 @@ public class BookSystem {
 		_socket.sendRequest(req);
 	}
 
-	public void connection(Integer port, String ip){//byte[] ip) {
-		boolean res = _socket.connection(port, ip);
-		_gui.changeContext(guiContext.CONNECTION, res);
+	public void cancelResgitration() {
+		_reg.setVisible(false);
+		_log.setVisible(true);
 	}
+	
+	public void registerScreen() {
+		_log.setVisible(false);
+		_reg.setVisible(true);
+	}
+
+	public void connection(Integer port, String ip){//byte[] ip) {
+		if (_socket.connection(port, ip)) {
+			_co.setVisible(false);
+			_log.setVisible(true);
+		} else {
+		_co.displayErrorMessage();
+		}
+	}
+	
+	public void resetConnection() {
+		if (_log.isVisible())
+			_log.setVisible(false);
+		if (_cal.isVisible())
+			_cal.setVisible(false);
+		if (_reg.isVisible())
+			_reg.setVisible(false);
+		_co.setVisible(true);
+		_co.displayDiscoMsg();
+	}
+
 }

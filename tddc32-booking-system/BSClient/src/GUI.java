@@ -99,6 +99,11 @@ public class GUI extends JFrame implements ActionListener {
 		menuBar.add(mnFile);
 		
 		mntmExit = new JMenuItem("exit");
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//exit();
+			}
+		});
 		mnFile.add(mntmExit);
 		getContentPane().setLayout(new CardLayout(0, 0));
 		
