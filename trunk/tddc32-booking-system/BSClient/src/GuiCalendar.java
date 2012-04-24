@@ -3,6 +3,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.dyno.visual.swing.layouts.GroupLayout;
+import java.awt.GridBagLayout;
 
 
 //VS4E -- DO NOT REMOVE THIS LINE!
@@ -19,11 +20,16 @@ public class GuiCalendar extends JFrame {
 	
 	public GuiCalendar() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{0};
+		gridBagLayout.rowHeights = new int[]{0};
+		gridBagLayout.columnWeights = new double[]{Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{Double.MIN_VALUE};
+		getContentPane().setLayout(gridBagLayout);
 		initComponents();
 	}
 
 	private void initComponents() {
-		getContentPane().setLayout(new GroupLayout());
 		setSize(320, 240);
 	}
 
