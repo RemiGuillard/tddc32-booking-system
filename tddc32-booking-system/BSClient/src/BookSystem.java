@@ -85,7 +85,7 @@ public class BookSystem {
 		_socket.sendRequest(req);
 	}
 
-	public void connection(Integer port, byte[] ip) {
+	public void connection(Integer port, String ip){//byte[] ip) {
 		boolean res = _socket.connection(port, ip);
 		_gui.changeContext(guiContext.CONNECTION, res);
 	}
