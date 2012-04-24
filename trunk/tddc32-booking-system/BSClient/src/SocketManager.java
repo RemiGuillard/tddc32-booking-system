@@ -16,6 +16,7 @@ public class SocketManager implements Runnable {
 	private	String		_login;
 	private	Socket		_sock = null;
 	private	byte[]		_ip = {127,0,0,1};
+	private String		_ipStr;
 	private	InetAddress	_addr;
     private ObjectOutputStream	_output;
     private ObjectInputStream	_input;
@@ -26,16 +27,18 @@ public class SocketManager implements Runnable {
 	
 	public SocketManager() {}
 	
-	public	boolean	connection(int port, byte ip[]) {
+	public	boolean	connection(int port, String ip) {//byte ip[]) {
 		//TODO port & IP check
-		_ip = ip;
+		_ipStr = ip;
 		//byte[] b = {(byte) 192,(byte) 168,(byte)1,Byte.parseByte(arg0)(65)};
 		try {
-			Integer[] _ip2 = {_ip[0]&0xFF,_ip[1]&0xFF,_ip[2]&0xFF,_ip[3]&0xFF};
+			//_ipStr = _ip[0] + _ip[1] + _ip[4] + _ip[3];
+			//Integer[] _ip2 = {_ip[0]&0xFF,_ip[1]&0xFF,_ip[2]&0xFF,_ip[3]&0xFF};
 			//_addr = InetAddress.get(_ip2);
 			//_addr = InetAddress.getByName("192.168.1.65");
+			System.out.println(_ipStr);
 			_port = port;
-			_sock = new Socket("192.168.1.65", _port);
+			_sock = new Socket(_ipStr, _port);
 			_output = new ObjectOutputStream(_sock.getOutputStream());
 	        _input = new ObjectInputStream(_sock.getInputStream());
 	        _t = new Thread(this);

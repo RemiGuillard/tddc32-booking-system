@@ -396,13 +396,14 @@ public class GUI extends JFrame implements ActionListener {
 	}
 	
 	public	void	actionBtnConnection() {
-		byte[]	ip = {
+		String ipStr = _IP1.getText() + "." + _IP2.getText() + "." + _IP3.getText() + "." + _IP4.getText();
+		/*byte[]	ip = {
 				Byte.parseByte(_IP1.getText()),
 				Byte.parseByte(_IP2.getText()),
 				Byte.parseByte(_IP3.getText()),
 				Byte.parseByte(_IP4.getText()),
-		};
-		_bs.connection(Integer.valueOf(_Port.getText()), ip);
+		};*/
+		_bs.connection(Integer.valueOf(_Port.getText()), ipStr);
 	}
 
 	public void setBookSys(BookSystem bookMana) {
