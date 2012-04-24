@@ -11,11 +11,12 @@ public class Main {
 			public void run() {
 				try {
 					SocketManager	sock = new SocketManager();
-					GUI frame = new GUI();
-					BookSystem	bookMana = new BookSystem(sock, frame);
+					GuiConnect co = new GuiConnect();
+					
+					BookSystem	bookMana = new BookSystem(sock, co);
 					sock.setBookSys(bookMana);
-					frame.setBookSys(bookMana);
-					frame.setVisible(true);
+					co.setBookSys(bookMana);
+					co.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

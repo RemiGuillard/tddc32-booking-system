@@ -1,26 +1,19 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 import NetworkPackage.Answer;
 import NetworkPackage.Request;
-import NetworkPackage.queryType;
 
 
 public class SocketManager implements Runnable {
 	private	int			_port = 42042;
-	private	String		_password;
-	private	String		_login;
 	private	Socket		_sock = null;
-	private	byte[]		_ip = {127,0,0,1};
 	private String		_ipStr;
-	private	InetAddress	_addr;
-    private ObjectOutputStream	_output;
+	private ObjectOutputStream	_output;
     private ObjectInputStream	_input;
-    private	Request[]	_requestPool;
     private	BookSystem	_bs;
     private Thread		_t;		
     //private	GUI			_gui;
@@ -32,11 +25,7 @@ public class SocketManager implements Runnable {
 		_ipStr = ip;
 		//byte[] b = {(byte) 192,(byte) 168,(byte)1,Byte.parseByte(arg0)(65)};
 		try {
-			//_ipStr = _ip[0] + _ip[1] + _ip[4] + _ip[3];
-			//Integer[] _ip2 = {_ip[0]&0xFF,_ip[1]&0xFF,_ip[2]&0xFF,_ip[3]&0xFF};
-			//_addr = InetAddress.get(_ip2);
-			//_addr = InetAddress.getByName("192.168.1.65");
-			System.out.println(_ipStr);
+
 			_port = port;
 			_sock = new Socket(_ipStr, _port);
 			_output = new ObjectOutputStream(_sock.getOutputStream());
@@ -67,7 +56,18 @@ public class SocketManager implements Runnable {
 				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					_input.close();
+					_output.close();
+					_sock.close();
+					//e.printStackTrace();
+					_bs.resetConnection();
+					return;
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					return;
+				}
 			}
 		}
 	}
