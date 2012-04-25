@@ -130,7 +130,7 @@ public class GuiLogin extends JFrame {
 	}
 
 	public void sayRegistrationSuccesful() {
-		JOptionPane.showConfirmDialog(this, "Registration succesful", "Registration", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, "Registration succesful", "Registration", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public void sayLoginFailed() {
