@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.IOException;
 
 import java.io.ObjectInputStream;
@@ -5,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Calendar;
 
 import NetworkPackage.Answer;
 import NetworkPackage.Request;
@@ -49,6 +51,9 @@ public class BookSystem {
 		case DELAYING:
 			manageDelaying(an);
 			break;
+		case CALENDAR:
+			manageCalendar(an);
+			break;
 		default:
 			break;
 		}
@@ -58,17 +63,39 @@ public class BookSystem {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private void manageCalendar(Answer an) {
+		// TODO Auto-generated method stub
+		if (an.value) {
+			int row = an.bookdate.get(Calendar.HOUR_OF_DAY) - 8;
+			int col = an.bookdate.get(Calendar.DAY_OF_WEEK) - 1;
+			if (an.userid == _userID)
+				_cal.setBookOnGui(Color.orange, row, col);
+			else if (an.userid != _userID)
+				_cal.setBookOnGui(Color.red, row, col);
+		}
+		
+	}
 
 	private void manageCanceling(Answer an) {
 		// TODO Auto-generated method stub
+		if (an.value) {
+			int row = an.bookdate.get(Calendar.HOUR_OF_DAY) - 8;
+			int col = an.bookdate.get(Calendar.DAY_OF_WEEK) - 1;
+			_cal.setBookOnGui(Color.green, row, col);
+		}
 		
 	}
 
 	private void manageBooking(Answer an) {
 		// TODO Auto-generated method stub
-		
+		if (an.value) {
+			int row = an.bookdate.get(Calendar.HOUR_OF_DAY) - 8;
+			int col = an.bookdate.get(Calendar.DAY_OF_WEEK) - 1;
+			_cal.setBookOnGui(Color.orange, row, col);
+		}
 	}
-
+	
 	private void manageRegister(Answer an) {
 		if (an.value) {
 			_reg.setVisible(false);
@@ -88,6 +115,30 @@ public class BookSystem {
 		} else 
 			_log.sayLoginFailed();
 	//	_gui.changeContext(guiContext.LOGIN, an.value);
+	}
+	
+	public 	void	askWeek(int nbWeek) {
+		Request	req	= new Request();
+		req.type = queryType.CALENDAR;
+		req.userid = _userID;
+		req.weekYear = nbWeek;
+		_socket.sendRequest(req);
+	}
+	
+	public	void	book(Calendar cal) {
+		Request	req	= new Request();
+		req.type = queryType.BOOKING;
+		req.userid = _userID;
+		req.bookdate = cal;
+		_socket.sendRequest(req);
+	}
+	
+	public void Cancel(Calendar cal) {
+		Request	req	= new Request();
+		req.type = queryType.CANCELING;
+		req.userid = _userID;
+		req.bookdate = cal;
+		_socket.sendRequest(req);
 	}
 
 	public void register(String login, String pass) {

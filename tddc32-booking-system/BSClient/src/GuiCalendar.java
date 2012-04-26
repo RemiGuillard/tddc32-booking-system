@@ -1,11 +1,17 @@
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.toedter.calendar.JCalendar;
-import com.toedter.calendar.JDateChooser;
+import NetworkPackage.Answer;
 
+//import com.toedter.calendar.JCalendar;
 //import org.dyno.visual.swing.layouts.GroupLayout;
 import java.awt.GridBagLayout;
 import javax.swing.JTable;
@@ -17,9 +23,20 @@ import javax.swing.table.TableColumn;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 import java.awt.Insets;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.Component;
+import javax.swing.Box;
 
-
+import org.freixas.jcalendar.DateEvent;
+import org.freixas.jcalendar.DateListener;
 //VS4E -- DO NOT REMOVE THIS LINE!
 public class GuiCalendar extends JFrame {
 
@@ -27,9 +44,33 @@ public class GuiCalendar extends JFrame {
 	private static final String PREFERRED_LOOK_AND_FEEL = null;
 
 	private	BookSystem	_bs;
-	private JTable table;
-	private	DefaultTableModel model;
-	private	JCalendar	calendar;
+	private JTable 		_table;
+	private	TableModel 	_model;
+	//private	 RowEditorModel _rm;
+	private	org.freixas.jcalendar.JCalendar	_calendar;
+	private	int			_currentWeek;
+	private	int			_todaysWeek;
+	private JPanel btnpanel;
+	private JButton btnReaload;
+	private Component horizontalStrut;
+	private String[] free_values = { "", "Book" };
+	private String  title[] = {"Hour", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+	private Object[][] _data = {	
+			{"8h","free","free","free","free","free","free","free"},
+			{"9h","free","free","free","free","free","free","free"},
+			{"10h","free","free","free","free","free","free","free"},
+			{"11h","free","free","free","free","free","free","free"},
+			{"12h","free","free","free","free","free","free","free"},
+			{"13h","free","free","free","free","free","free","free"},
+			{"14h","free","free","free","free","free","free","free"},
+			{"15h","free","free","free","free","free","free","free"},
+			{"16h","free","free","free","free","free","free","free"},
+			{"17h","free","free","free","free","free","free","free"},
+			{"18h","free","free","free","free","free","free","free"},
+			{"19h","free","free","free","free","free","free","free"},
+			{"20h","free","free","free","free","free","free","free"},
+			{"21h","free","free","free","free","free","free","free"}
+	};
 
 	public void setBookSys(BookSystem bookMana) {
 		_bs = bookMana;
@@ -40,59 +81,140 @@ public class GuiCalendar extends JFrame {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0};
-		gridBagLayout.columnWeights = new double[]{Double.MIN_VALUE, 0.0, 0.0, 0.0, 0.0, 1.0};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 1.0};
 		gridBagLayout.rowWeights = new double[]{Double.MIN_VALUE, 1.0};
 		getContentPane().setLayout(gridBagLayout);
 		
+		
 		//add JCalendar
-		calendar = new JCalendar();
+		_calendar = new org.freixas.jcalendar.JCalendar();
+		_calendar.addDateListener(new DateListener() {
+			@Override
+			public void dateChanged(DateEvent arg0) {
+				// TODO Auto-generated method stub
+				int week = getWeekNumber();
+				if (week == _currentWeek || week < _todaysWeek)
+					return;
+				_bs.askWeek(week);
+				//JOptionPane.showMessageDialog(getContentPane(), week/*_calendar.getDate().toString()*/, "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		});
 		GridBagConstraints gbc_calendar = new GridBagConstraints();
+		gbc_calendar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_calendar.insets = new Insets(0, 0, 5, 5);
 		gbc_calendar.gridx = 0;
 		gbc_calendar.gridy = 0;
-		getContentPane().add(calendar, gbc_calendar);
+		getContentPane().add(_calendar, gbc_calendar);
 		
-		//model = new DefaultTableModel();
-		Object[][] data = {	
-				{"8h","","","","","","",""},
-				{"9h","","","","","","",""},
-				{"10h","","","","","","",""},
-				{"11h","","","","","","",""},
-				{"12h","","","","","","",""},
-				{"13h","","","","","","",""},
-				{"14h","","","","","","",""},
-				{"15h","","","","","","",""},
-				{"16h","","","","","","",""},
-				{"17h","","","","","","",""},
-				{"18h","","","","","","",""},
-				{"19h","","","","","","",""},
-				{"20h","","","","","","",""},
-				{"21h","","","","","","",""}
-		};
-	        //Columns title
-		String  title[] = {"Hour", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 		
-		table = new JTable(data, title);
-		table.setRowHeight(40);
-		table.setFillsViewportHeight(true);
-		table.setColumnSelectionAllowed(true);
-		table.setCellSelectionEnabled(true);
-		table.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_table = new GridBagConstraints();
-		gbc_table.gridheight = 2;
-		gbc_table.fill = GridBagConstraints.BOTH;
-		gbc_table.gridx = 5;
-		gbc_table.gridy = 0;
-		JScrollPane scrollPane = new JScrollPane(table);
-		getContentPane().add(scrollPane, gbc_table);
+		createJtable();
+		
+		
+		btnpanel = new JPanel();
+		GridBagConstraints gbc_btnpanel = new GridBagConstraints();
+		gbc_btnpanel.insets = new Insets(0, 0, 0, 5);
+		gbc_btnpanel.fill = GridBagConstraints.BOTH;
+		gbc_btnpanel.gridx = 0;
+		gbc_btnpanel.gridy = 1;
+		getContentPane().add(btnpanel, gbc_btnpanel);
+		GridBagLayout gbl_btnpanel = new GridBagLayout();
+		gbl_btnpanel.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_btnpanel.rowHeights = new int[]{0, 0, 0, 0};
+		gbl_btnpanel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_btnpanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		btnpanel.setLayout(gbl_btnpanel);
+		
+		btnReaload = new JButton("Reaload");
+		btnReaload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//JOptionPane.showMessageDialog(getContentPane(), getWeekNumber(), "Error", JOptionPane.ERROR_MESSAGE);
+				_bs.askWeek(getWeekNumber());
+			}
+		});
+		GridBagConstraints gbc_btnReaload = new GridBagConstraints();
+		gbc_btnReaload.insets = new Insets(0, 0, 5, 5);
+		gbc_btnReaload.gridx = 1;
+		gbc_btnReaload.gridy = 0;
+		btnpanel.add(btnReaload, gbc_btnReaload);
+		
+		horizontalStrut = Box.createHorizontalStrut(20);
+		GridBagConstraints gbc_horizontalStrut = new GridBagConstraints();
+		gbc_horizontalStrut.insets = new Insets(0, 0, 0, 5);
+		gbc_horizontalStrut.gridx = 0;
+		gbc_horizontalStrut.gridy = 2;
+		btnpanel.add(horizontalStrut, gbc_horizontalStrut);
 		initComponents();
 	}
-
+	
+	private	void	createJtable() {
+	    //JTABLE
+		if (_table != null)
+			getContentPane().remove(_table);
+		_model = new TableModel(_data, title);
+		_table = new JTable(_model);
+		_table.setDefaultRenderer(Color.class, new ColorCellRenderer());
+		_table.setDefaultEditor(Color.class, new ColorCellEditor(this, _calendar, _bs));
+		_table.setRowHeight(40);
+		_table.setFillsViewportHeight(true);
+		_table.setColumnSelectionAllowed(true);
+		_table.setCellSelectionEnabled(true);
+		_table.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		GridBagConstraints gbc_table = new GridBagConstraints();
+		gbc_table.gridwidth = 5;
+		gbc_table.gridheight = 2;
+		gbc_table.fill = GridBagConstraints.BOTH;
+		gbc_table.gridx = 1;
+		gbc_table.gridy = 0;
+		JScrollPane scrollPane = new JScrollPane(_table);
+		getContentPane().add(scrollPane, gbc_table);
+	}
+	
+	private	int	getWeekNumber() {
+        Calendar cal;
+        Date date;
+        int week;
+        date = _calendar.getDate();
+        cal = Calendar.getInstance();
+        cal.setTime(date);
+        week = cal.get(Calendar.WEEK_OF_YEAR);
+		return week;
+	}
+	
+	public	void	setBookOnGui(Color color, int row, int col) {
+		_table.setValueAt(color, row, col);
+	}
+	
 	private void initComponents() {
-
 		setSize(925, 516);
+		_currentWeek = getWeekNumber();
+        Calendar cal;
+        cal = Calendar.getInstance();
+		_todaysWeek = cal.get(cal.WEEK_OF_YEAR);
+		initWeek();
 	}
 
+	private	void	initWeek() {
+		int	row = _table.getRowCount();
+		int	col = _table.getColumnCount();
+		int	i = 1;
+		int j = 1;
+		while (i < col) {
+			j = 0;
+			while(j < row) {
+				Object obj = _table.getValueAt(j, i);
+				if (obj instanceof String) {
+					String val = (String)obj;
+					if (val.equalsIgnoreCase("free")) {
+						_data[j][i] =  Color.GREEN;
+					}
+				}
+				++j;
+			}
+			++i;
+		}
+		createJtable();
+	}
+	
 	private static void installLnF() {
 		try {
 			String lnfClassname = PREFERRED_LOOK_AND_FEEL;
