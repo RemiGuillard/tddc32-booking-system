@@ -46,9 +46,10 @@ public class SocketManager implements Runnable {
 	
 	@Override
 	public void run() {
-		Answer an;
+		
 		while (true) {
 			try {
+				Answer an = new Answer();
 				an = (Answer) _input.readObject();
 				_bs.manageAnswer(an);
 			} catch (ClassNotFoundException e) {

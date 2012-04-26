@@ -80,7 +80,7 @@ public class GuiCalendar extends JFrame {
 		//initComponents();
 	}
 	
-	private	void	createJtable() {
+	public	void	createJtable() {
 	    //JTABLE
 		if (_table != null)
 			getContentPane().remove(_table);
@@ -115,7 +115,7 @@ public class GuiCalendar extends JFrame {
 	}
 	
 	public	void	setBookOnGui(Color color, int row, int col) {
-		JOptionPane.showMessageDialog(getContentPane(), getWeekNumber(), "Error", JOptionPane.ERROR_MESSAGE);
+		//JOptionPane.showMessageDialog(getContentPane(), getWeekNumber(), "Error", JOptionPane.ERROR_MESSAGE);
 		_table.setValueAt(color, row, col);
 	}
 	
