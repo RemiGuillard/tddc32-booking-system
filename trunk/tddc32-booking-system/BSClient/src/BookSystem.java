@@ -35,6 +35,8 @@ public class BookSystem {
 	}
 	
 	public	void	manageAnswer(Answer an) {
+		System.out.println(an);
+		if (an != null)
 		switch (an.type) {
 		case LOGIN:
 			manageLogin(an);
@@ -110,6 +112,7 @@ public class BookSystem {
 			_userID = an.userid;
 			_log.setVisible(false);
 			_cal.setVisible(true);
+			_cal.setBookSys(this);
 			_cal.initComponents();
 		} else 
 			_log.sayLoginFailed();
