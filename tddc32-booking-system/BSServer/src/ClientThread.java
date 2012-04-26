@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import NetworkPackage.Answer;
 import NetworkPackage.Request;
+import NetworkPackage.queryType;
 
 
 /**
@@ -54,11 +58,24 @@ public class ClientThread implements Runnable {
         boolean isAlive = true;
         while (isAlive) {
         	try {
-
+        		
         		System.out.println("[DEBUG] - Waiting for Something");
         		Request req = (Request) _ios.readObject();
         		System.out.println("[DEBUG] - Something received");
-        		_oos.writeObject(this._bs.executeRequest(req));
+        		Answer an;
+        		ArrayList<Answer> list;
+        		synchronized(this._bs) {
+        			an = this._bs.executeRequest(req);
+        			if (an.type == queryType.CALENDAR) {
+        				list = this._bs.getCalendarList();
+        				ListIterator<Answer> it = list.listIterator();
+        				while (it.hasNext()) {
+        					_oos.writeObject((Answer)it.next());
+        				}
+        				
+        			} else
+        				_oos.writeObject(an);
+        		}
         		System.out.println("[DEBUG] - Sending Something");
         		_oos.flush();
         		
