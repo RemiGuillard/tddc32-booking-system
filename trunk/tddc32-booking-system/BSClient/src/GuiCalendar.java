@@ -77,6 +77,49 @@ public class GuiCalendar extends JFrame {
 	}
 	
 	public GuiCalendar() {
+		//initComponents();
+	}
+	
+	private	void	createJtable() {
+	    //JTABLE
+		if (_table != null)
+			getContentPane().remove(_table);
+		_model = new TableModel(_data, title);
+		_table = new JTable(_model);
+		_table.setDefaultRenderer(Color.class, new ColorCellRenderer());
+		_table.setDefaultEditor(Color.class, new ColorCellEditor(this, _calendar, _bs));
+		_table.setRowHeight(40);
+		_table.setFillsViewportHeight(true);
+		_table.setColumnSelectionAllowed(true);
+		_table.setCellSelectionEnabled(true);
+		_table.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		GridBagConstraints gbc_table = new GridBagConstraints();
+		gbc_table.gridwidth = 5;
+		gbc_table.gridheight = 2;
+		gbc_table.fill = GridBagConstraints.BOTH;
+		gbc_table.gridx = 1;
+		gbc_table.gridy = 0;
+		JScrollPane scrollPane = new JScrollPane(_table);
+		getContentPane().add(scrollPane, gbc_table);
+	}
+	
+	private	int	getWeekNumber() {
+        Calendar cal;
+        Date date;
+        int week;
+        date = _calendar.getDate();
+        cal = Calendar.getInstance();
+        cal.setTime(date);
+        week = cal.get(Calendar.WEEK_OF_YEAR);
+		return week;
+	}
+	
+	public	void	setBookOnGui(Color color, int row, int col) {
+		JOptionPane.showMessageDialog(getContentPane(), getWeekNumber(), "Error", JOptionPane.ERROR_MESSAGE);
+		_table.setValueAt(color, row, col);
+	}
+	
+	public void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
@@ -95,6 +138,7 @@ public class GuiCalendar extends JFrame {
 				int week = getWeekNumber();
 				if (week == _currentWeek || week < _todaysWeek)
 					return;
+				_currentWeek = week;
 				_bs.askWeek(week);
 				//JOptionPane.showMessageDialog(getContentPane(), week/*_calendar.getDate().toString()*/, "Error", JOptionPane.ERROR_MESSAGE);
 			}
@@ -143,53 +187,11 @@ public class GuiCalendar extends JFrame {
 		gbc_horizontalStrut.gridx = 0;
 		gbc_horizontalStrut.gridy = 2;
 		btnpanel.add(horizontalStrut, gbc_horizontalStrut);
-		initComponents();
-	}
-	
-	private	void	createJtable() {
-	    //JTABLE
-		if (_table != null)
-			getContentPane().remove(_table);
-		_model = new TableModel(_data, title);
-		_table = new JTable(_model);
-		_table.setDefaultRenderer(Color.class, new ColorCellRenderer());
-		_table.setDefaultEditor(Color.class, new ColorCellEditor(this, _calendar, _bs));
-		_table.setRowHeight(40);
-		_table.setFillsViewportHeight(true);
-		_table.setColumnSelectionAllowed(true);
-		_table.setCellSelectionEnabled(true);
-		_table.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_table = new GridBagConstraints();
-		gbc_table.gridwidth = 5;
-		gbc_table.gridheight = 2;
-		gbc_table.fill = GridBagConstraints.BOTH;
-		gbc_table.gridx = 1;
-		gbc_table.gridy = 0;
-		JScrollPane scrollPane = new JScrollPane(_table);
-		getContentPane().add(scrollPane, gbc_table);
-	}
-	
-	private	int	getWeekNumber() {
-        Calendar cal;
-        Date date;
-        int week;
-        date = _calendar.getDate();
-        cal = Calendar.getInstance();
-        cal.setTime(date);
-        week = cal.get(Calendar.WEEK_OF_YEAR);
-		return week;
-	}
-	
-	public	void	setBookOnGui(Color color, int row, int col) {
-		_table.setValueAt(color, row, col);
-	}
-	
-	private void initComponents() {
 		setSize(925, 516);
 		_currentWeek = getWeekNumber();
         Calendar cal;
         cal = Calendar.getInstance();
-		_todaysWeek = cal.get(cal.WEEK_OF_YEAR);
+		_todaysWeek = cal.get(Calendar.WEEK_OF_YEAR);
 		initWeek();
 	}
 
