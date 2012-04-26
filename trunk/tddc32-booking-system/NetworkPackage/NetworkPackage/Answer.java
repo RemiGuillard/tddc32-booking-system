@@ -12,7 +12,7 @@ public class Answer implements java.io.Serializable {
 	public int			errorValue;
 	public int			bookid;
 	public int			userBooking;
-	public int			wkNbr;
+	public int			weekYear;
 	public int			userid;
 	public Calendar		bookdate;
 	public int			machineid;
