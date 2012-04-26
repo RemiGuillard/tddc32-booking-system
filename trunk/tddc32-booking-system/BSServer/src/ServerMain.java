@@ -1,12 +1,15 @@
 
+
+
+
 public class ServerMain {
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		BookSystem bs;
-		
+		BookSystem bs;		
+
 		try {
 			bs = new BookSystem();
 		} catch (Exception e) {
