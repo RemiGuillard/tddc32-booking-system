@@ -1,6 +1,6 @@
 package NetworkPackage;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Request implements java.io.Serializable {
 
@@ -10,6 +10,7 @@ public class Request implements java.io.Serializable {
 	public String		login;
 	public String		password;
 	public Date			bookdate;
+	public int			wkNbr;
 	public int			userid;
 	public int			bookid;
 	public int			weekYear;
