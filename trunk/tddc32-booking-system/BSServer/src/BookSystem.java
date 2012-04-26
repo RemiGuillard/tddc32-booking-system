@@ -71,7 +71,7 @@ public class BookSystem {
 			break;
 			
 		case CALENDAR:
-			an.value = this.getWeekBooking(req.wkNbr);
+			an.value = this.getWeekBooking(req.weekYear);
 			break;
 			
 		default:
@@ -104,7 +104,7 @@ public class BookSystem {
 			an.bookdate.setTime(new Date(Long.parseLong(res.get("BookDate"))));
 			an.userid = Integer.parseInt(res.get("UserID"));
 			an.bookid = Integer.parseInt(res.get("ID"));
-			an.wkNbr = Integer.parseInt(res.get("WeekNumber"));
+			an.weekYear = Integer.parseInt(res.get("WeekNumber"));
 			calendarList.add(an);
 
 		}
@@ -114,7 +114,7 @@ public class BookSystem {
 	private int	tryLogin(String login, String password) {
 		Iterator<Hashtable<String, String>> it = db.selectQuery("SELECT ID, PassWord FROM LaundryUsers WHERE UserName = '"+login+"';").iterator();
 		Hashtable<String, String> res;
-		
+		System.out.println("LOGIN");
 		if (it.hasNext()) {
 			res = (Hashtable<String, String>) it.next();
 			if (res.get("PassWord").equals(password))
