@@ -103,8 +103,6 @@ public class BookSystem {
 			_log.sayRegistrationSuccesful();
 		} else 
 			_reg.sayRegistrationFailed();
-			
-		//		_gui.changeContext(guiContext.REGISTER, an.value);
 	}
 	
 	private void manageLogin(Answer an) {
@@ -112,6 +110,7 @@ public class BookSystem {
 			_userID = an.userid;
 			_log.setVisible(false);
 			_cal.setVisible(true);
+			_cal.initComponents();
 		} else 
 			_log.sayLoginFailed();
 	//	_gui.changeContext(guiContext.LOGIN, an.value);
