@@ -19,7 +19,7 @@ public class BookSystem {
 	
 	public BookSystem() throws Exception {
 		db = new DBManager();
-		calendarList = new ArrayList();
+		calendarList = new ArrayList<Answer>();
 		if (!db.dbConnect()) {
 			System.out.println("ERROR: Can't connect to database");
 			throw new Exception ();
@@ -53,6 +53,7 @@ public class BookSystem {
 		case BOOKING:
 			an.value = this.tryBooking(req.userid, req.bookdate);
 			an.type = req.type;
+			an.bookdate = req.bookdate;
 			break;
 			
 		case DELAYING:
@@ -72,6 +73,7 @@ public class BookSystem {
 			
 		case CALENDAR:
 			an.value = this.getWeekBooking(req.weekYear);
+			an.type = req.type;
 			break;
 			
 		default:
