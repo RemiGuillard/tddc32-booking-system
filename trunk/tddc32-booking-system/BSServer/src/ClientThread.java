@@ -65,6 +65,7 @@ public class ClientThread implements Runnable {
         		Answer an;
         		ArrayList<Answer> list;
         		synchronized(this._bs) {
+        			System.out.println("USER : " + req.userid);
         			an = this._bs.executeRequest(req);
         			if (an.type == queryType.CALENDAR) {
         				list = this._bs.getCalendarList();
@@ -76,6 +77,7 @@ public class ClientThread implements Runnable {
         			} else
         				_oos.writeObject(an);
         		}
+        		System.out.println("USER : " + an.userid);
         		System.out.println("[DEBUG] - Sending Something");
         		_oos.flush();
         		
