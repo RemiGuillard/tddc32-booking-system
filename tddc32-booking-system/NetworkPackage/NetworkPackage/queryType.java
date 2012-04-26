@@ -7,6 +7,7 @@ public enum queryType {
 	REGISTER,
 	BOOKING,
 	DELAYING,
+	CALENDAR,
 	CANCELING
 
 }
