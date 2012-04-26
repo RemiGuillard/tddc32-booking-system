@@ -12,5 +12,6 @@ public class Request implements java.io.Serializable {
 	public Date			bookdate;
 	public int			userid;
 	public int			bookid;
+	public int			weekYear;
 	
 }
