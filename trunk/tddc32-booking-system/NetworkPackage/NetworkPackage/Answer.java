@@ -1,5 +1,6 @@
 package NetworkPackage;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Answer implements java.io.Serializable {
@@ -13,6 +14,6 @@ public class Answer implements java.io.Serializable {
 	public int			userBooking;
 	public int			wkNbr;
 	public int			userid;
-	public Date			bookdate;
+	public Calendar		bookdate;
 	public int			machineid;
 }
