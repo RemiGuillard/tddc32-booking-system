@@ -56,7 +56,7 @@ public class BookSystem {
 			break;
 			
 		case DELAYING:
-			an.value = this.tryDelaying(req.bookid, req.bookdate);
+			//an.value = this.tryDelaying(req.bookid, req.bookdate);
 			an.type = req.type;
 			break;
 			
@@ -96,10 +96,12 @@ public class BookSystem {
 																" WHERE WeekNumber = "+wkNbr+";").iterator();
 		Hashtable<String, String> res;
 		Answer an = new Answer();
+
 		an.type = queryType.CALENDAR;
 		while (it.hasNext()) {
 			res = (Hashtable<String, String>) it.next();
-			an.bookdate= new Date(Long.parseLong(res.get("BookDate")));
+			an.bookdate = Calendar.getInstance();
+			an.bookdate.setTime(new Date(Long.parseLong(res.get("BookDate"))));
 			an.userid = Integer.parseInt(res.get("UserID"));
 			an.bookid = Integer.parseInt(res.get("ID"));
 			an.wkNbr = Integer.parseInt(res.get("WeekNumber"));
@@ -122,13 +124,11 @@ public class BookSystem {
 		return -1;
 	}
 
-	private boolean tryBooking(int userid, Date d) {
+	private boolean tryBooking(int userid, Calendar d) {
 		System.out.println("BOOKING");
-		String date = "" + d.getTime();
+		String date = "" + d.getTime().getTime();
 		
-		Calendar c = Calendar.getInstance();
-		c.setTime(d);
-		int wkNb = c.get(Calendar.WEEK_OF_YEAR);
+		int wkNb = d.get(Calendar.WEEK_OF_YEAR);
 		
 		return db.insertQuery("INSERT INTO LaundryBooking (UserID, BookDate, WeekNumber) VALUES ("+userid+", "+date+", "+wkNb+");");
 
