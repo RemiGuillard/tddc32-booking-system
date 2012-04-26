@@ -1,5 +1,6 @@
 package NetworkPackage;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Request implements java.io.Serializable {
@@ -9,7 +10,7 @@ public class Request implements java.io.Serializable {
 	public queryType	type;
 	public String		login;
 	public String		password;
-	public Date			bookdate;
+	public Calendar		bookdate;
 	public int			wkNbr;
 	public int			userid;
 	public int			bookid;
