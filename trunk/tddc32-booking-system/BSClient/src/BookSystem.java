@@ -80,7 +80,6 @@ public class BookSystem {
 	}
 
 	private void manageCanceling(Answer an) {
-		// TODO Auto-generated method stub
 		if (an.value) {
 			int row = an.bookdate.get(Calendar.HOUR_OF_DAY) - 8;
 			int col = an.bookdate.get(Calendar.DAY_OF_WEEK) - 1;
@@ -90,7 +89,6 @@ public class BookSystem {
 	}
 
 	private void manageBooking(Answer an) {
-		// TODO Auto-generated method stub
 		if (an.value) {
 			int row = an.bookdate.get(Calendar.HOUR_OF_DAY) - 8;
 			int col = an.bookdate.get(Calendar.DAY_OF_WEEK) - 1;
@@ -114,6 +112,7 @@ public class BookSystem {
 			_cal.setVisible(true);
 			_cal.setBookSys(this);
 			_cal.initComponents();
+			askWeek(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
 		} else 
 			_log.sayLoginFailed();
 	//	_gui.changeContext(guiContext.LOGIN, an.value);
