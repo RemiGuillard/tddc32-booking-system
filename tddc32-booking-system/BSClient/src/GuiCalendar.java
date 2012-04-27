@@ -80,7 +80,7 @@ public class GuiCalendar extends JFrame {
 		//initComponents();
 	}
 	
-	public	void	createJtable() {
+	private	void	createJtable() {
 	    //JTABLE
 		if (_table != null)
 			getContentPane().remove(_table);
@@ -115,7 +115,9 @@ public class GuiCalendar extends JFrame {
 	}
 	
 	public	void	setBookOnGui(Color color, int row, int col) {
-		//JOptionPane.showMessageDialog(getContentPane(), getWeekNumber(), "Error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(getContentPane(), "Color = " + color.toString() + " row = " +row + " col= "+ col , "Error", JOptionPane.ERROR_MESSAGE);
+		_data[row][col] = color;
+		initWeek();
 		_table.setValueAt(color, row, col);
 	}
 	
@@ -206,9 +208,17 @@ public class GuiCalendar extends JFrame {
 				Object obj = _table.getValueAt(j, i);
 				if (obj instanceof String) {
 					String val = (String)obj;
-					if (val.equalsIgnoreCase("free")) {
+					if (val.equalsIgnoreCase("free") )
 						_data[j][i] =  Color.GREEN;
-					}
+				}
+				if (obj instanceof Color) {
+					Color val = (Color)obj;
+					if (val == Color.green)
+						_data[j][i] =  Color.GREEN;
+					else if (val == Color.orange)
+						_data[j][i] =  Color.GREEN;
+					else if (val == Color.red)
+						_data[j][i] =  Color.GREEN;
 				}
 				++j;
 			}
