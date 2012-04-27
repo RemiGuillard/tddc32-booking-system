@@ -77,7 +77,7 @@ public class ClientThread implements Runnable {
         			} else
         				_oos.writeObject(an);
         		}
-        		System.out.println("USER : " + an.userid);
+        		System.out.println("USER : " + an.userid + " value " + an.value);
         		System.out.println("[DEBUG] - Sending Something");
         		_oos.flush();
         		
