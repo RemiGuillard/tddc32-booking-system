@@ -120,6 +120,7 @@ public class BookSystem {
 	
 	public 	void	askWeek(int nbWeek) {
 		Request	req	= new Request();
+		_cal.initWeek();
 		req.type = queryType.CALENDAR;
 		req.userid = _userID;
 		req.weekYear = nbWeek;
