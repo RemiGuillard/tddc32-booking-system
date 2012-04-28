@@ -19,7 +19,11 @@ import javax.swing.table.TableCellEditor;
 import org.freixas.jcalendar.JCalendar;
 
 public class ColorCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
-    private Color couleur;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Color couleur;
     private JButton bouton;
     private JColorChooser colorChooser;
     private JDialog dialog;
@@ -58,7 +62,7 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
             	askCancelBooking();
             else if (couleur.equals(Color.RED))
             	informImpossible();
-            //fireEditingStopped();
+            fireEditingStopped();
         } else {
             couleur = colorChooser.getColor();
         }
@@ -104,7 +108,7 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
 		int year = cal.get(Calendar.YEAR);
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 		int n = JOptionPane.showOptionDialog(_win,
-				"Would you like To book the day : " + day +"/"+ month +"/"+ year + " at "+ hour + "h ?",
+				"Would you like To book the day "+ cal.getTime().toString() +" : " + day +"/"+ month +"/"+ year + " at "+ hour + "h ?",
 				"Booking", JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, free_space, free_space[1]);
 		if (n == 0) {
@@ -118,7 +122,13 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
     public Object getCellEditorValue() {
         return couleur;
     }
-
+	
+	public void	setCellEditorValue(Color color) {
+		couleur = color;
+		JOptionPane.showMessageDialog(_win, "Color = " + color.toString() + " row = " +_row + " col= "+ _col , "Error", JOptionPane.ERROR_MESSAGE);
+		fireEditingStopped();
+	}
+	
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         couleur = (Color)value;

@@ -115,10 +115,25 @@ public class GuiCalendar extends JFrame {
 	}
 	
 	public	void	setBookOnGui(Color color, int row, int col) {
-		JOptionPane.showMessageDialog(getContentPane(), "Color = " + color.toString() + " row = " +row + " col= "+ col , "Error", JOptionPane.ERROR_MESSAGE);
+		//JOptionPane.showMessageDialog(getContentPane(), "row = " + row + " col =" + col , "Error", JOptionPane.ERROR_MESSAGE);
+		//Color tmp = (Color)_table.getValueAt(row, col);
+		//JOptionPane.showMessageDialog(getContentPane(), "aColor = " + tmp.toString() + "cColor =" + color + " row = " +row + " col= "+ col , "Error", JOptionPane.ERROR_MESSAGE);
 		_data[row][col] = color;
-		initWeek();
 		_table.setValueAt(color, row, col);
+		_model.setData(_data);
+		//tmp = (Color)_table.getValueAt(row, col);
+		//JOptionPane.showMessageDialog(getContentPane(), "Color = " + tmp.toString() , "Error", JOptionPane.ERROR_MESSAGE);
+		//_data[row][col] = color;
+		//initWeek();
+		//_table.setValueAt(color, row, col);
+		//_table.getCellRenderer(row, col).getTableCellRendererComponent(_table, color, true, true, row, col);
+		//ColorCellEditor tmp =  (ColorCellEditor) _table.getDefaultEditor(Color.class);
+		//tmp.getTableCellEditorComponent(_table, color, true, row, col);
+		//tmp.setCellEditorValue(color);
+		//tmp.stopCellEditing();
+		//ColorCellEditor tmp = (ColorCellEditor)_table.getCellEditor(row, col);
+		//tmp.getTableCellEditorComponent(_table, color, true, row, col).setBackground(color);
+		//tmp.setCellEditorValue(color);
 	}
 	
 	public void initComponents() {
@@ -197,7 +212,7 @@ public class GuiCalendar extends JFrame {
 		initWeek();
 	}
 
-	private	void	initWeek() {
+	public	void	initWeek() {
 		int	row = _table.getRowCount();
 		int	col = _table.getColumnCount();
 		int	i = 1;
@@ -205,26 +220,23 @@ public class GuiCalendar extends JFrame {
 		while (i < col) {
 			j = 0;
 			while(j < row) {
-				Object obj = _table.getValueAt(j, i);
-				if (obj instanceof String) {
+				//Object obj = _table.getValueAt(j, i);
+				_table.setValueAt(Color.green, j, i);
+				/*if (obj instanceof String) {
 					String val = (String)obj;
 					if (val.equalsIgnoreCase("free") )
 						_data[j][i] =  Color.GREEN;
 				}
-				if (obj instanceof Color) {
+				else if (obj instanceof Color) {
 					Color val = (Color)obj;
-					if (val == Color.green)
-						_data[j][i] =  Color.GREEN;
-					else if (val == Color.orange)
-						_data[j][i] =  Color.GREEN;
-					else if (val == Color.red)
-						_data[j][i] =  Color.GREEN;
-				}
+					_data[j][i] = val;
+				}*/
 				++j;
 			}
 			++i;
 		}
-		createJtable();
+		_model.setData(_data);
+		//createJtable();
 	}
 	
 	private static void installLnF() {

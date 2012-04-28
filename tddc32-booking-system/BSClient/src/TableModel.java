@@ -23,6 +23,13 @@ class TableModel extends AbstractTableModel{
 		this.title = title;
 	}
 	
+	//Fonction qui va s'occupper de remettre à jour tout mon tableau et qui va mettre
+	//à jour aussi l'affichage
+	public void setData(Object[][] newData){
+	data = newData;
+	super.fireTableDataChanged();
+	}
+	
 	/**
 	* Retourne le titre de la colonne à l'indice spécifé
 	*/
