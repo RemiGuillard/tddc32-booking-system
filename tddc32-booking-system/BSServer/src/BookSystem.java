@@ -97,11 +97,13 @@ public class BookSystem {
 		Iterator<Hashtable<String, String>> it = db.selectQuery("SELECT ID, BookDate, WeekNumber, UserID FROM LaundryBooking" +
 																" WHERE WeekNumber = "+wkNbr+";").iterator();
 		Hashtable<String, String> res;
-		Answer an = new Answer();
-
-		an.type = queryType.CALENDAR;
+		
 		while (it.hasNext()) {
+			Answer an = new Answer();
+
+			an.type = queryType.CALENDAR;
 			res = (Hashtable<String, String>) it.next();
+			an.value = true;
 			an.bookdate = Calendar.getInstance();
 			an.bookdate.setTime(new Date(Long.parseLong(res.get("BookDate"))));
 			an.userid = Integer.parseInt(res.get("UserID"));
@@ -127,7 +129,7 @@ public class BookSystem {
 	}
 
 	private boolean tryBooking(int userid, Calendar d) {
-		System.out.println("BOOKING");
+		System.out.println("BOOKING " + d.getTime());
 		String date = "" + d.getTime().getTime();
 		
 		int wkNb = d.get(Calendar.WEEK_OF_YEAR);

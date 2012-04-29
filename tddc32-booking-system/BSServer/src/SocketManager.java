@@ -41,7 +41,7 @@ public class SocketManager implements Runnable {
 	public void run() {
 		try {
 			this._ss = new ServerSocket(this._port, this._nbMax);	// Socket created listening on _port
-			this._ss.setSoTimeout(10000);							// Setting timeout to 10 sec - "I'm not dead"
+			this._ss.setSoTimeout(60000);							// Setting timeout to 10 sec - "I'm not dead"
 			printWelcome(this._port);
 
 		} catch (IOException ex) {
