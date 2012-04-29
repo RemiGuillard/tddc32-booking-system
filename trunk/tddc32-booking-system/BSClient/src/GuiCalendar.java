@@ -192,11 +192,11 @@ public class GuiCalendar extends JFrame {
 				_bs.askWeek(getWeekNumber());
 			}
 		});
-		GridBagConstraints gbc_btnReaload = new GridBagConstraints();
-		gbc_btnReaload.insets = new Insets(0, 0, 5, 5);
-		gbc_btnReaload.gridx = 1;
-		gbc_btnReaload.gridy = 0;
-		btnpanel.add(btnReload, gbc_btnReaload);
+		GridBagConstraints gbc_btnReload = new GridBagConstraints();
+		gbc_btnReload.insets = new Insets(0, 0, 5, 5);
+		gbc_btnReload.gridx = 1;
+		gbc_btnReload.gridy = 0;
+		btnpanel.add(btnReload, gbc_btnReload);
 		
 		horizontalStrut = Box.createHorizontalStrut(20);
 		GridBagConstraints gbc_horizontalStrut = new GridBagConstraints();
