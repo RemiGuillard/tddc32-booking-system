@@ -54,6 +54,7 @@ public class BookSystem {
 			an.value = this.tryBooking(req.userid, req.bookdate);
 			an.type = req.type;
 			an.bookdate = req.bookdate;
+			System.out.println("Booking " + an.value);
 			break;
 			
 		case DELAYING:
@@ -129,12 +130,12 @@ public class BookSystem {
 	}
 
 	private boolean tryBooking(int userid, Calendar d) {
+		
 		System.out.println("BOOKING " + d.getTime());
 		String date = "" + d.getTime().getTime();
-		
-		int wkNb = d.get(Calendar.WEEK_OF_YEAR);
-		
-		return db.insertQuery("INSERT INTO LaundryBooking (UserID, BookDate, WeekNumber) VALUES ("+userid+", "+date+", "+wkNb+");");
+		String strDate = d.getTime().toString();
+		int wkNb = d.get(Calendar.WEEK_OF_YEAR);		
+		return db.insertQuery("INSERT INTO LaundryBooking (UserID, BookDate, WeekNumber, TimeStr) VALUES ("+userid+", '"+date+"', "+wkNb+", '"+strDate+"');");
 
 	}
 	
