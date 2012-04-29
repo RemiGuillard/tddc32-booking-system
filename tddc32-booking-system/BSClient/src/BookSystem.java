@@ -35,7 +35,7 @@ public class BookSystem {
 	}
 	
 	public	void	manageAnswer(Answer an) {
-		System.out.println(an);
+
 		if (an != null)
 		switch (an.type) {
 		case LOGIN:
@@ -69,8 +69,11 @@ public class BookSystem {
 	private void manageCalendar(Answer an) {
 		// TODO Auto-generated method stub
 		if (an.value) {
+			System.out.println(an.bookdate.getTime());
 			int row = an.bookdate.get(Calendar.HOUR_OF_DAY) - 8;
 			int col = an.bookdate.get(Calendar.DAY_OF_WEEK) - 1;
+			if (an.bookdate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+				col = 7;
 			if (an.userid == _userID)
 				_cal.setBookOnGui(Color.orange, row, col);
 			else if (an.userid != _userID)
@@ -83,6 +86,8 @@ public class BookSystem {
 		if (an.value) {
 			int row = an.bookdate.get(Calendar.HOUR_OF_DAY) - 8;
 			int col = an.bookdate.get(Calendar.DAY_OF_WEEK) - 1;
+			if (an.bookdate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+				col = 7;
 			_cal.setBookOnGui(Color.green, row, col);
 		}
 		
@@ -92,6 +97,8 @@ public class BookSystem {
 		if (an.value) {
 			int row = an.bookdate.get(Calendar.HOUR_OF_DAY) - 8;
 			int col = an.bookdate.get(Calendar.DAY_OF_WEEK) - 1;
+			if (an.bookdate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+				col = 7;
 			_cal.setBookOnGui(Color.orange, row, col);
 		}
 	}
