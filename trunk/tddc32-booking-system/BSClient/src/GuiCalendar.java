@@ -51,9 +51,9 @@ public class GuiCalendar extends JFrame {
 	private	int			_currentWeek;
 	private	int			_todaysWeek;
 	private JPanel btnpanel;
-	private JButton btnReaload;
+	private JButton btnReload;
 	private Component horizontalStrut;
-	private String[] free_values = { "", "Book" };
+	//private String[] free_values = { "", "Book" };
 	private String  title[] = {"Hour", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 	private Object[][] _data = {	
 			{"8h","free","free","free","free","free","free","free"},
@@ -185,8 +185,8 @@ public class GuiCalendar extends JFrame {
 		gbl_btnpanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		btnpanel.setLayout(gbl_btnpanel);
 		
-		btnReaload = new JButton("Reaload");
-		btnReaload.addActionListener(new ActionListener() {
+		btnReload = new JButton("Reload");
+		btnReload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//JOptionPane.showMessageDialog(getContentPane(), getWeekNumber(), "Error", JOptionPane.ERROR_MESSAGE);
 				_bs.askWeek(getWeekNumber());
@@ -196,7 +196,7 @@ public class GuiCalendar extends JFrame {
 		gbc_btnReaload.insets = new Insets(0, 0, 5, 5);
 		gbc_btnReaload.gridx = 1;
 		gbc_btnReaload.gridy = 0;
-		btnpanel.add(btnReaload, gbc_btnReaload);
+		btnpanel.add(btnReload, gbc_btnReaload);
 		
 		horizontalStrut = Box.createHorizontalStrut(20);
 		GridBagConstraints gbc_horizontalStrut = new GridBagConstraints();

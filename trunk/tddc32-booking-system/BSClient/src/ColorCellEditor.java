@@ -82,6 +82,8 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
 		cal.setTime(_cal.getDate());
 		cal.set(Calendar.HOUR_OF_DAY, _row + 8);
 		cal.set(Calendar.DAY_OF_WEEK, _col + 1);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
 		int day = cal.get(Calendar.DAY_OF_MONTH);
 		int month = cal.get(Calendar.MONTH) + 1;
 		int year = cal.get(Calendar.YEAR);
@@ -103,6 +105,8 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
 		cal.setTime(_cal.getDate());
 		cal.set(Calendar.HOUR_OF_DAY, _row + 8);
 		cal.set(Calendar.DAY_OF_WEEK, _col + 1);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
 		int day = cal.get(Calendar.DAY_OF_MONTH);
 		int month = cal.get(Calendar.MONTH) + 1;
 		int year = cal.get(Calendar.YEAR);
