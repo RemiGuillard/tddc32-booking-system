@@ -63,8 +63,9 @@ public class BookSystem {
 			break;
 			
 		case CANCELING:
-			an.value = this.tryCanceling(req.bookid);
+			an.value = this.tryCanceling(req.bookdate);
 			an.type = req.type;
+			an.bookdate = req.bookdate;
 			break;
 		
 		case REGISTER:
@@ -154,9 +155,9 @@ public class BookSystem {
 		return db.insertQuery("UPDATE LaundryBooking SET BookDate = '"+date+"' WHERE ID = "+id+";");
 	}
 	
-	private boolean tryCanceling(int bookid) {
-		
-		return db.insertQuery("DELETE FROM LaundryBooking WHERE ID = "+bookid+";");
+	private boolean tryCanceling(Calendar c) {
+		String date = c.getTime().toString();
+		return db.insertQuery("DELETE FROM LaundryBooking WHERE TimeStr = '"+date+"';");
 	}
 	
 	private boolean tryRegister(String login, String password) {
