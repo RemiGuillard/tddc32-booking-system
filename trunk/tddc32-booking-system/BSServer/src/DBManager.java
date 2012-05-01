@@ -46,7 +46,7 @@ public class DBManager {
 		return connected;
 	}
 	   
-	public boolean	insertQuery(String sql) {
+	public boolean	simpleQuery(String sql) {
 		
 		Statement statement;
 		
