@@ -1,37 +1,21 @@
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import NetworkPackage.Answer;
-
-//import com.toedter.calendar.JCalendar;
-//import org.dyno.visual.swing.layouts.GroupLayout;
 import java.awt.GridBagLayout;
 import javax.swing.JTable;
 import java.awt.GridBagConstraints;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 import java.awt.Insets;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.Component;
 import javax.swing.Box;
 
@@ -49,11 +33,10 @@ public class GuiCalendar extends JFrame {
 	//private	 RowEditorModel _rm;
 	private	org.freixas.jcalendar.JCalendar	_calendar;
 	private	int			_currentWeek;
-	private	int			_todaysWeek;
+
 	private JPanel btnpanel;
 	private JButton btnReload;
 	private Component horizontalStrut;
-	//private String[] free_values = { "", "Book" };
 	private String  title[] = {"Hour", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 	private Object[][] _data = {	
 			{"8h","free","free","free","free","free","free","free"},
@@ -72,11 +55,18 @@ public class GuiCalendar extends JFrame {
 			{"21h","free","free","free","free","free","free","free"}
 	};
 
+	private boolean _flag;
+	
+	public boolean isInitialized() {
+		return _flag;
+	}
+	
 	public void setBookSys(BookSystem bookMana) {
 		_bs = bookMana;
 	}
 	
 	public GuiCalendar() {
+		_flag = false;
 		//initComponents();
 	}
 	
@@ -115,28 +105,19 @@ public class GuiCalendar extends JFrame {
 	}
 	
 	public	void	setBookOnGui(Color color, int row, int col) {
-		//JOptionPane.showMessageDialog(getContentPane(), "row = " + row + " col =" + col , "Error", JOptionPane.ERROR_MESSAGE);
-		//Color tmp = (Color)_table.getValueAt(row, col);
-		//JOptionPane.showMessageDialog(getContentPane(), "aColor = " + tmp.toString() + "cColor =" + color + " row = " +row + " col= "+ col , "Error", JOptionPane.ERROR_MESSAGE);
+		
 		_data[row][col] = color;
 		_table.setValueAt(color, row, col);
 		_model.setData(_data);
-		//tmp = (Color)_table.getValueAt(row, col);
-		//JOptionPane.showMessageDialog(getContentPane(), "Color = " + tmp.toString() , "Error", JOptionPane.ERROR_MESSAGE);
-		//_data[row][col] = color;
-		//initWeek();
-		//_table.setValueAt(color, row, col);
-		//_table.getCellRenderer(row, col).getTableCellRendererComponent(_table, color, true, true, row, col);
-		//ColorCellEditor tmp =  (ColorCellEditor) _table.getDefaultEditor(Color.class);
-		//tmp.getTableCellEditorComponent(_table, color, true, row, col);
-		//tmp.setCellEditorValue(color);
-		//tmp.stopCellEditing();
-		//ColorCellEditor tmp = (ColorCellEditor)_table.getCellEditor(row, col);
-		//tmp.getTableCellEditorComponent(_table, color, true, row, col).setBackground(color);
-		//tmp.setCellEditorValue(color);
+		
+	}
+	
+	public void sayBookingFailed() {
+		JOptionPane.showMessageDialog(this, "Booking failed", "Booking", JOptionPane.ERROR_MESSAGE);
 	}
 	
 	public void initComponents() {
+		_flag = true;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
@@ -151,13 +132,12 @@ public class GuiCalendar extends JFrame {
 		_calendar.addDateListener(new DateListener() {
 			@Override
 			public void dateChanged(DateEvent arg0) {
-				// TODO Auto-generated method stub
+
 				int week = getWeekNumber();
-				if (week == _currentWeek || week < _todaysWeek)
+				if (week == _currentWeek)// || week < _todaysWeek)
 					return;
 				_currentWeek = week;
 				_bs.askWeek(week);
-				//JOptionPane.showMessageDialog(getContentPane(), week/*_calendar.getDate().toString()*/, "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		GridBagConstraints gbc_calendar = new GridBagConstraints();
@@ -188,7 +168,6 @@ public class GuiCalendar extends JFrame {
 		btnReload = new JButton("Reload");
 		btnReload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//JOptionPane.showMessageDialog(getContentPane(), getWeekNumber(), "Error", JOptionPane.ERROR_MESSAGE);
 				_bs.askWeek(getWeekNumber());
 			}
 		});
@@ -206,9 +185,7 @@ public class GuiCalendar extends JFrame {
 		btnpanel.add(horizontalStrut, gbc_horizontalStrut);
 		setSize(925, 516);
 		_currentWeek = getWeekNumber();
-        Calendar cal;
-        cal = Calendar.getInstance();
-		_todaysWeek = cal.get(Calendar.WEEK_OF_YEAR);
+
 		initWeek();
 	}
 
@@ -220,17 +197,7 @@ public class GuiCalendar extends JFrame {
 		while (i < col) {
 			j = 0;
 			while(j < row) {
-				//Object obj = _table.getValueAt(j, i);
 				_table.setValueAt(Color.green, j, i);
-				/*if (obj instanceof String) {
-					String val = (String)obj;
-					if (val.equalsIgnoreCase("free") )
-						_data[j][i] =  Color.GREEN;
-				}
-				else if (obj instanceof Color) {
-					Color val = (Color)obj;
-					_data[j][i] = val;
-				}*/
 				++j;
 			}
 			++i;

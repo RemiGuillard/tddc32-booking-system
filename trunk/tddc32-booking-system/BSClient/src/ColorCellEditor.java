@@ -3,17 +3,12 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.EventObject;
-
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 
 import org.freixas.jcalendar.JCalendar;
@@ -26,7 +21,6 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
 	private Color couleur;
     private JButton bouton;
     private JColorChooser colorChooser;
-    private JDialog dialog;
     private	JFrame	_win;
     private	JCalendar _cal;
 	private BookSystem _bs;
@@ -112,7 +106,7 @@ public class ColorCellEditor extends AbstractCellEditor implements TableCellEdit
 		int year = cal.get(Calendar.YEAR);
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 		int n = JOptionPane.showOptionDialog(_win,
-				"Would you like To book the day "+ cal.getTime().toString() +" : " + day +"/"+ month +"/"+ year + " at "+ hour + "h ?",
+				"Would you like To book the day : " + day +"/"+ month +"/"+ year + " at "+ hour + "h ?",
 				"Booking", JOptionPane.YES_NO_CANCEL_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, free_space, free_space[1]);
 		if (n == 0) {

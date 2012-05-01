@@ -1,11 +1,4 @@
 import java.awt.Color;
-import java.io.IOException;
-
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Calendar;
 
 import NetworkPackage.Answer;
@@ -62,12 +55,10 @@ public class BookSystem {
 	}
 
 	private void manageDelaying(Answer an) {
-		// TODO Auto-generated method stub
-		
+	
 	}
 	
 	private void manageCalendar(Answer an) {
-		// TODO Auto-generated method stub
 		if (an.value) {
 			System.out.println(an.bookdate.getTime());
 			int row = an.bookdate.get(Calendar.HOUR_OF_DAY) - 8;
@@ -100,7 +91,8 @@ public class BookSystem {
 			if (an.bookdate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
 				col = 7;
 			_cal.setBookOnGui(Color.orange, row, col);
-		}
+		} else
+			_cal.sayBookingFailed();
 	}
 	
 	private void manageRegister(Answer an) {
@@ -118,7 +110,8 @@ public class BookSystem {
 			_log.setVisible(false);
 			_cal.setVisible(true);
 			_cal.setBookSys(this);
-			_cal.initComponents();
+			if (!_cal.isInitialized())
+				_cal.initComponents();
 			askWeek(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
 		} else 
 			_log.sayLoginFailed();
