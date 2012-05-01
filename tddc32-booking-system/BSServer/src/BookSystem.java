@@ -1,5 +1,4 @@
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -136,11 +135,11 @@ public class BookSystem {
 		String date = "" + d.getTime().getTime();
 		String strDate = d.getTime().toString();
 		int wkNb = d.get(Calendar.WEEK_OF_YEAR);		
-		return db.insertQuery("INSERT INTO LaundryBooking (UserID, BookDate, WeekNumber, TimeStr) VALUES ("+userid+", '"+date+"', "+wkNb+", '"+strDate+"');");
+		return db.simpleQuery("INSERT INTO LaundryBooking (UserID, BookDate, WeekNumber, TimeStr) VALUES ("+userid+", '"+date+"', "+wkNb+", '"+strDate+"');");
 
 	}
 	
-	private boolean tryDelaying(int id, Date d) {
+	/*private boolean tryDelaying(int id, Date d) {
 		
 		String date = "" + d.getTime();
 		Iterator<Hashtable<String, String>> it = db.selectQuery("SELECT ID FROM LaundryBooking WHERE BookDate = '"+date+"';").iterator();
@@ -153,16 +152,16 @@ public class BookSystem {
 		}
 
 		return db.insertQuery("UPDATE LaundryBooking SET BookDate = '"+date+"' WHERE ID = "+id+";");
-	}
+	}*/
 	
 	private boolean tryCanceling(Calendar c) {
 		String date = c.getTime().toString();
-		return db.insertQuery("DELETE FROM LaundryBooking WHERE TimeStr = '"+date+"';");
+		return db.simpleQuery("DELETE FROM LaundryBooking WHERE TimeStr = '"+date+"';");
 	}
 	
 	private boolean tryRegister(String login, String password) {
 		
-		return db.insertQuery("INSERT INTO LaundryUsers (UserName, PassWord) VALUES ('"+login+"', '"+password+"');");
+		return db.simpleQuery("INSERT INTO LaundryUsers (UserName, PassWord) VALUES ('"+login+"', '"+password+"');");
 		
 	}
 }

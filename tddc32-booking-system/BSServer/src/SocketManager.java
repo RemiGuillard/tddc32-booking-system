@@ -78,8 +78,6 @@ public class SocketManager implements Runnable {
 		System.out.println("--------");
 		System.out.println("Start on port : "+port.toString());
 		System.out.println("--------");
-		System.out.println("Quit : enter \"quit\"");
-		System.out.println("--------");
 	}
 
 }
