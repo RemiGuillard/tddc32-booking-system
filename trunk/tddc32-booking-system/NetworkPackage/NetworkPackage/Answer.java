@@ -1,7 +1,6 @@
 package NetworkPackage;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class Answer implements java.io.Serializable {
 

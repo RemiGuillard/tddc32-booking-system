@@ -1,7 +1,6 @@
 package NetworkPackage;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class Request implements java.io.Serializable {
 
